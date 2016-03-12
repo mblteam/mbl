@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.UserMapper" >
+  <resultMap id="baseResultMap" type="com.mbl.common.bean.User" >
+    <id column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="address" property="address" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="point" property="point" jdbcType="DECIMAL" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="user_status" property="userStatus" jdbcType="VARCHAR" />
+    <result column="tel2" property="tel2" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="base_column_list" >
+    user_id, user_name, tel, address, sex, point, creation_date, creation_by, last_update_date, 
+    last_update_by, user_status, tel2
+  </sql>
+  <select id="getById" resultMap="baseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="base_column_list" />
+    from m_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_user
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.User" >
+    insert into m_user
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="userName != null" >
+        user_name,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+      <if test="address != null" >
+        address,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="point != null" >
+        point,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="userStatus != null" >
+        user_status,
+      </if>
+      <if test="tel2 != null" >
+        tel2,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        #{point,jdbcType=DECIMAL},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tel2 != null" >
+        #{tel2,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.User" >
+    update m_user
+    <set >
+      <if test="userName != null" >
+        user_name = #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        tel = #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null" >
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="point != null" >
+        point = #{point,jdbcType=DECIMAL},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="userStatus != null" >
+        user_status = #{userStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="tel2 != null" >
+        tel2 = #{tel2,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getCountByParams" resultType="long" parameterType="map">
+    select 
+    	count(*)
+    from m_user where 1=1 
+     <if test="userId!=null and userId!=''">AND user_id=#{userId,jdbcType=VARCHAR}</if>
+	 <if test="userName!=null and userName!=''">AND user_name like '%${userName}%'</if>
+	 <if test="tel!=null and tel!=''">AND tel like '%${tel}%'</if>
+	 <if test="tel2!=null and tel2!=''">AND tel2 like '%${tel2}%'</if>
+	 <if test="address!=null and address!=''">AND address like '%${address}%'</if>
+	 <if test="sex!=null and sex!=''">AND sex = #{sex,jdbcType=VARCHAR}</if>
+	 <if test="userStatus!=null and userStatus!=''">AND user_status = #{userStatus,jdbcType=VARCHAR}</if>
+  </select>
+ 	 <!-- 根据条件查询角色  -->
+	<select id="findListByParams" resultType="com.mbl.common.bean.User" >
+		select u.user_id userId, u.user_name userName, u.tel tel, u.address address, u.sex sex, u.point point, u.creation_date creationDate, u.creation_by creationBy,
+    		   u.last_update_date lastUpdateDate, u.last_update_by lastUpdateBy, u.user_status userStatus, u.tel2 tel2,a.account_type accountType
+		FROM m_user u left join m_account a on u.user_id=a.user_id
+		where 1=1
+		 <if test="userId!=null and userId!=''">AND a.user_id=#{userId,jdbcType=VARCHAR}</if>
+		 <if test="userName!=null and userName!=''">AND a.user_name like '%${userName}%'</if>
+		 <if test="tel!=null and tel!=''">AND a.tel like '%${tel}%'</if>
+		 <if test="tel2!=null and tel2!=''">AND a.tel2 like '%${tel2}%'</if>
+		 <if test="address!=null and address!=''">AND a.address like '%${address}%'</if>
+		 <if test="sex!=null and sex!=''">AND a.sex = #{sex,jdbcType=VARCHAR}</if>
+		 <if test="userStatus!=null and userStatus!=''">AND a.user_status = #{userStatus,jdbcType=VARCHAR}</if>
+		order by creationDate desc
+	</select>
+</mapper>

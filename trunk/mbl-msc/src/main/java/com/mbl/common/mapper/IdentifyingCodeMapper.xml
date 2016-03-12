@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.IdentifyingCodeMapper" >
+	
+	<!-- Parameter Map-->
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.IdentifyingCode"/>
+	
+  <resultMap id="BaseResultMap" type="com.mbl.common.bean.IdentifyingCode" >
+    <id column="code_id" property="codeId" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="send_code" property="sendCode" jdbcType="VARCHAR" />
+    <result column="flag" property="flag" jdbcType="VARCHAR" />
+    <result column="code_status" property="codeStatus" jdbcType="VARCHAR" />
+    <result column="disabled_date" property="disabledDate" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    code_id, tel, send_code, flag, code_status, disabled_date, creation_date, creation_by, last_update_date, last_update_by 
+  </sql>
+  <!-- 根据电话号码查询有效验证码 -->
+  <select id="findByTelAndFlag" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from m_identifying_code
+    where tel = #{tel,jdbcType=VARCHAR} and flag = #{flag,jdbcType=VARCHAR}
+  </select>
+  <insert id="save" parameterMap="baseParameterMap" >
+    insert into m_identifying_code(code_id,tel,send_code,flag,code_status,disabled_date
+    ,creation_date,creation_by,last_update_date, last_update_by)
+    values(#{codeId,jdbcType=VARCHAR}, #{tel,jdbcType=VARCHAR}, #{sendCode,jdbcType=VARCHAR}, 
+      #{flag,jdbcType=VARCHAR},#{codeStatus,jdbcType=VARCHAR},#{disabledDate,jdbcType=TIMESTAMP},
+      #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=VARCHAR},
+      #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdateBy,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="saveSelective" parameterMap="baseParameterMap">
+    insert into m_identifying_code
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="codeId != null" >
+        code_id,
+      </if>
+       <if test="sendCode != null" >
+        send_code,
+      </if>
+      <if test="tel != null" >
+        tel,
+      </if>
+       <if test="flag != null" >
+        flag,
+      </if>
+      <if test="codeStatus != null" >
+        code_status,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="disabledDate != null" >
+        disabled_date,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="codeId != null" >
+        #{codeId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendCode != null" >
+        #{sendCode,jdbcType=VARCHAR},
+      </if>
+      <if test="tel != null" >
+        #{tel,jdbcType=VARCHAR},
+      </if>
+      <if test="flag != null" >
+        #{flag,jdbcType=VARCHAR},
+      </if>
+      <if test="codeStatus != null" >
+        #{codeStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="disabledDate != null" >
+        #{disabledDate,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterMap="baseParameterMap">
+    update m_identifying_code
+    <set >
+	  	<if test="sendCode != null" >
+	    	send_code = #{sendCode,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="tel != null" >
+	    	tel = #{tel,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="flag != null" >
+	    	flag = #{flag,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="codeStatus != null" >
+	    	code_status = #{codeStatus,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="creationDate != null" >
+	    	creation_date = #{creationDate,jdbcType=TIMESTAMP},
+	  	</if>
+	  	<if test="creationBy != null" >
+	    	creation_by = #{creationBy,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="lastUpdateDate != null" >
+	    	last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+	  	</if>
+	  	<if test="lastUpdateBy != null" >
+	    	last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+	  	</if>
+	  	<if test="disabledDate != null" >
+	    	disabled_date = #{disabledDate,jdbcType=TIMESTAMP},
+	  	</if>
+    </set>
+    where code_id = #{code_id,jdbcType=VARCHAR}
+  </update>
+  <update id="update" parameterMap="baseParameterMap">
+    update m_identifying_code
+    set
+	  send_code = #{sendCode,jdbcType=VARCHAR},
+	  tel = #{tel,jdbcType=VARCHAR},
+	  flag = #{flag,jdbcType=VARCHAR},
+	  code_status = #{codeStatus,jdbcType=VARCHAR},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      creation_by = #{creationBy,jdbcType=VARCHAR},
+      last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      disabled_date = #{disabledDate,jdbcType=TIMESTAMP}
+    where code_id = #{codeId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="getCountByParams" resultType="long" parameterType="map" >
+    select count(*) from m_identifying_code where 1=1
+    <if test="codeId != null" >
+    	code_id = #{codeId,jdbcType=VARCHAR},
+  	</if>
+  	<if test="sendCode != null" >
+    	send_code = #{sendCode,jdbcType=VARCHAR},
+  	</if>
+  	<if test="tel != null" >
+    	tel = #{tel,jdbcType=VARCHAR},
+  	</if>
+  	<if test="flag != null" >
+    	flag = #{flag,jdbcType=VARCHAR},
+  	</if>
+  	<if test="codeStatus != null" >
+    	code_status = #{codeStatus,jdbcType=VARCHAR},
+  	</if>
+  	<if test="creationDate != null" >
+    	creation_date = #{creationDate,jdbcType=TIMESTAMP},
+  	</if>
+  	<if test="creationBy != null" >
+    	creation_by = #{creationBy,jdbcType=VARCHAR},
+  	</if>
+  	<if test="lastUpdateDate != null" >
+    	last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+  	</if>
+  	<if test="lastUpdateBy != null" >
+    	last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+  	</if>
+  	<if test="disabledDate != null" >
+    	disabled_date = #{disabledDate,jdbcType=TIMESTAMP},
+  	</if>
+  </select>
+</mapper>

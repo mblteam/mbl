@@ -1,0 +1,45 @@
+.pagination {
+	margin: -1px 0 0;
+	font-weight: 400;
+	border-radius: 0px 0px 0px 0px;
+    width: 100%; 
+    border-top: 1px solid #CCCCCC;
+    padding-right: 5%;
+    padding-left: 5%;
+}	
+.pagination div, .pagination a {
+    color: #888888;
+    display: inline-block;
+    font-size: 16px;
+    text-decoration: none;
+    vertical-align: middle;
+}
+.pagination div.next, .pagination div.previous, .pagination a.next, .pagination a.previous {
+    font-size: 14px;
+    line-height: 14px;
+    padding: 10px;
+}
+.pagination div div.active, .pagination div a.active, 
+.pagination a div.active, .pagination a a.active,
+.pagination div div.active:hover, .pagination div a.active:hover, 
+.pagination a div.active:hover, .pagination a a.active:hover {
+    border-top: 2px solid #34302D;
+    color: #34302D;
+    padding-top: 8px;
+}
+.pagination div div, .pagination div a, .pagination a div, .pagination a a {
+    color: #888888;
+    padding: 10px;
+}
+/*.pagination div:hover,.pagination a:hover {
+    color: #34302D;
+};*/
+.pagination a i:hover {
+    color: #34302D;
+}
+.pagination div div:hover, .pagination div a:hover,
+.pagination a div:hover, .pagination a a:hover {
+    border-top: 2px solid #CCCCCC;
+    color: #34302D;
+    padding-top: 8px;
+}

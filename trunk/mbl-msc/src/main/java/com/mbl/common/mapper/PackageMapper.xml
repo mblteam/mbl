@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.PackageMapper">
+  <resultMap id="baseResultMap" type="com.mbl.common.vo.PackageVO">
+    <id column="pkg_id" jdbcType="VARCHAR" property="pkgId" />
+    <result column="pkg_name" jdbcType="VARCHAR" property="pkgName" />
+    <result column="pkg_type" jdbcType="VARCHAR" property="pkgType" />
+    <result column="pkg_num" jdbcType="VARCHAR" property="pkgNum" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="creation_by" jdbcType="VARCHAR" property="creationBy" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
+    <result column="pkg_content" jdbcType="VARCHAR" property="pkgContent" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  
+  <sql id="base_column_list">
+    pkg_id, pkg_name, pkg_type, pkg_num, creation_date, creation_by, last_update_date, 
+    last_update_by,pkg_content,remark
+  </sql>
+  
+  <select id="getPackageById" parameterType="java.lang.String" resultMap="baseResultMap">
+    select 
+    <include refid="base_column_list" />
+    from m_package
+    where pkg_id = #{pkgId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="findListPageByParams" resultMap="baseResultMap">
+  	select  <include refid="base_column_list" />
+      from m_package
+     where delete_flag = '0'
+      <if test="pkgName != null and pkgName != ''">
+        <![CDATA[ pkg_name like concat('%',#{pkgName,jdbcType=VARCHAR},'%')]]>
+      </if>
+      <if test="pkgType != null and pkgType != ''">
+        pkg_type = #{pkgType,jdbcType=VARCHAR}
+      </if>
+  </select>
+
+  <update id="updatePackageStatusById">
+  	update m_package set delete_flag = '1'
+  	 where pkg_id = #{id,jdbcType=VARCHAR}
+  </update>
+
+  <select id="getCountByParams" resultType="Long">
+  	select COUNT(1)
+      from m_package
+     where 1=1
+      <if test="pkgName != null and pkgName != ''">
+        <![CDATA[ pkg_name like concat('%',#{pkgName,jdbcType=VARCHAR},'%')]]>
+      </if>
+      <if test="pkgType != null and pkgType != ''">
+        pkg_type = #{pkgType,jdbcType=VARCHAR}
+      </if>
+  </select>
+  
+  <insert id="save" parameterType="com.mbl.common.bean.Package">
+    insert into m_package
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="pkgId != null">
+        pkg_id,
+      </if>
+      <if test="pkgName != null">
+        pkg_name,
+      </if>
+      <if test="pkgType != null">
+        pkg_type,
+      </if>
+      <if test="pkgNum != null">
+        pkg_num,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="creationBy != null">
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by,
+      </if>
+      <if test="pkgContent != null">
+        pkg_content,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="pkgId != null">
+        #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgName != null">
+        #{pkgName,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null">
+        #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null">
+        #{pkgNum,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+       <if test="pkgContent != null">
+       	#{pkgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+      	#{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.Package">
+    update m_package
+    <set>
+      <if test="pkgName != null">
+        pkg_name = #{pkgName,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null">
+        pkg_type = #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null">
+        pkg_num = #{pkgNum,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+       <if test="pkgContent != null">
+       	pkg_content = #{pkgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null">
+      	remark = #{remark,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pkg_id = #{pkgId,jdbcType=VARCHAR}
+  </update>
+</mapper>

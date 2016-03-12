@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.AuthMenuMapper">
+<!-- Parameter Map-->
+<parameterMap id="baseParameterMap" type="com.mbl.common.bean.Menu"/>
+<!-- Result Map-->
+<resultMap id="baseResultMap" type="com.mbl.common.bean.Menu"/>
+
+<!-- 映射字段 -->
+<sql id="base_column_list" >
+	menu_Id menuId,menu_code menuCode,menu_Name menuName,grade,seq,menu_Status menuStatus,menu_Url menuUrl,
+	parent_Menu_Id parentMenuId,creation_Date creationDate,creation_By creationBy,
+	last_Update_Date lastUpdateDate,last_Update_By lastUpdateBy
+</sql>
+
+<!-- 保存菜单 -->
+<insert id="save" parameterMap="baseParameterMap">
+	INSERT INTO m_menu(menu_id,menu_code,menu_name,grade,seq,menu_status,menu_url,parent_menu_id,creation_date,creation_by,
+	last_update_date,last_update_by) VALUES(#{menuId,jdbcType=VARCHAR},#{menuCode,jdbcType=VARCHAR},#{menuName,jdbcType=VARCHAR},
+	#{grade,jdbcType=INTEGER},#{seq,jdbcType=INTEGER},#{menuStatus,jdbcType=VARCHAR},#{menuUrl,jdbcType=VARCHAR},#{parentMenuId,jdbcType=VARCHAR},
+	#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+	#{lastUpdateBy,jdbcType=VARCHAR})
+</insert>
+
+<!-- 修改菜单 -->
+<update id="update" parameterMap="baseParameterMap">
+	UPDATE m_menu 
+	<set >
+		<if test="menuCode != null" >
+      		menu_code=#{menuCode,jdbcType=VARCHAR},
+      	</if>
+		<if test="menuName != null" >
+      		menu_name=#{menuName,jdbcType=VARCHAR},
+      	</if>
+      	<if test="grade != null" >
+      		grade=#{grade,jdbcType=VARCHAR},
+      	</if>
+      	<if test="seq != null" >
+      		seq=#{seq,jdbcType=VARCHAR},
+      	</if>
+      	<if test="menuStatus != null" >
+      		menu_status=#{menuStatus,jdbcType=VARCHAR},
+      	</if>
+      	<if test="menuUrl != null" >
+      		menu_url=#{menuUrl,jdbcType=VARCHAR},
+      	</if>
+      	<if test="parentMenuId != null" >
+      		parent_menu_id=#{parentMenuId,jdbcType=VARCHAR},
+      	</if>
+      	<if test="creationDate != null" >
+      		creation_date=#{creationDate,jdbcType=TIMESTAMP},
+      	</if>
+      	<if test="creationBy != null" >
+      		creation_by=#{creationBy,jdbcType=VARCHAR},
+      	</if>
+      	<if test="lastUpdateDate != null" >
+      		last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+      	</if>
+      	<if test="lastUpdateBy != null" >
+      		last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+      	</if>
+     </set> 
+	WHERE menu_id=#{menuId,jdbcType=VARCHAR}
+</update>
+
+<!-- 根据id删除某个菜单 -->
+<delete id="delById">
+	delete from m_menu where menu_id=#{menuId,jdbcType=VARCHAR} 
+</delete>
+
+<!-- 根据id查询某个菜单 -->
+<select id="getById" resultMap="baseResultMap">
+	SELECT <include refid="base_column_list" /> 
+	FROM m_menu where menu_id = #{menuId,jdbcType=VARCHAR}
+</select>
+
+<!-- 根据条件查询菜单 -->
+<select id="findListByParams" resultMap="baseResultMap">
+	SELECT <include refid="base_column_list" /> 
+	FROM m_menu where 1=1
+	 <if test="parentMenuId!=null and parentMenuId!=''">AND parent_menu_id=#{parentMenuId,jdbcType=VARCHAR}</if>
+	 <if test="menuId!=null and menuId!=''">AND menu_id=#{menuId,jdbcType=VARCHAR}</if>
+	 <if test="menuCode!=null and menuCode!=''">AND menu_code=#{menuCode,jdbcType=VARCHAR}</if>
+	 <if test="menuName!=null and menuName!=''">AND menu_name=#{menuName,jdbcType=VARCHAR}</if>
+	 order by seq asc
+</select>
+
+<!-- 查找根菜单 -->
+<select id="findRootMenu" resultMap="baseResultMap">
+	SELECT <include refid="base_column_list" /> FROM m_menu where parent_menu_id is null
+</select>
+
+<!-- 根据条件查询菜单数量 -->
+<select id="getCountByParams" resultType="Long">
+	SELECT count(1)
+	FROM m_menu where 1=1
+	 <if test="parentMenuId!=null and parentMenuId!=''">AND parent_menu_id=#{parentMenuId,jdbcType=VARCHAR}</if>
+	 <if test="menuId!=null and menuId!=''">AND menu_id=#{menuId,jdbcType=VARCHAR}</if>
+	 <if test="menuCode!=null and menuCode!=''">AND menu_code=#{menuCode,jdbcType=VARCHAR}</if>
+	 <if test="menuName!=null and menuName!=''">AND menu_name=#{menuName,jdbcType=VARCHAR}</if>
+</select>
+
+<!-- 根据条件查询菜单数量除了当前菜单 -->
+<select id="getCountByParamsNotMenuId" parameterType="map" resultType="Long">
+	SELECT count(1) 
+	FROM m_menu where 1=1
+	 <if test="parentMenuId!=null and parentMenuId!=''">AND parent_menu_id=#{parentMenuId,jdbcType=VARCHAR}</if>
+	 <if test="menuName!=null and menuName!=''">AND menu_name=#{menuName,jdbcType=VARCHAR}</if>
+	 <if test="menuCode!=null and menuCode!=''">AND menu_code=#{menuCode,jdbcType=VARCHAR}</if>
+	 <if test="menuId!=null and menuId!=''">AND menu_id &lt;&gt; #{menuId,jdbcType=VARCHAR}</if>
+</select>
+
+</mapper>

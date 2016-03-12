@@ -1,0 +1,102 @@
+/***  jstree 样式 ***/
+.tree_border{
+	border:1px solid #eee;
+	height:600px;
+	overflow:auto;
+	padding-left: 5px;
+}
+.jstree-default .jstree-themeicon:before {
+    content: "";
+}
+.jstree-default .jstree-open > a > i.jstree-themeicon:before {
+     content: "";
+}
+.jstree-default .jstree-open > .jstree-ocl:before {
+    content: "";
+}
+.jstree-default .jstree-closed > .jstree-ocl:before {
+    content: "";
+}
+.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox:before {
+     content: "";
+}
+.jstree-default .jstree-checkbox:before {
+     content: "";
+}
+.jstree-default .jstree-anchor > .jstree-undetermined:before {
+    content: "";
+}
+.jstree-default >
+.jstree-container-ul.jstree-children > li.jstree-node.jstree-closed > a > .jstree-themeicon{
+    padding-top: 0px !important;
+}
+.jstree-default .jstree-themeicon {
+    padding-top: 0px !important;
+}
+.jstree-default
+.jstree-node >
+.jstree-anchor >
+.jstree-icon.jstree-themeicon{
+    padding-top: 3px !important;
+}
+.jstree-default .jstree-closed > a > i.jstree-themeicon {
+     padding-top: 0px;
+}
+.jstree-default .jstree-open > a > i.jstree-themeicon {
+    padding-top: 3px;
+}
+
+.jstree-default .jstree-open > .jstree-ocl {
+    color: #666;
+}
+.jstree-default .jstree-closed > .jstree-ocl {
+    color: #666;
+}
+.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,
+.jstree-default.jstree-checkbox-selection .jstree-clicked.jstree-anchor.jstree-hovered > .jstree-checkbox{
+    padding-top: 3px !important;
+    color: #666;
+    font-size: 16px !important;
+}
+.jstree-default [class=jstree-anchor]>.jstree-icon.jstree-checkbox,
+.jstree-default .jstree-anchor.jstree-hovered>.jstree-icon.jstree-checkbox {
+    color: #bbb;
+    padding-top: 0px !important;
+}
+.jstree-default .jstree-anchor > .jstree-icon.jstree-checkbox.jstree-undetermined{
+    color: #888 !important;
+    font-size: 16px !important;
+    padding-top: 3px !important;
+
+}
+
+.jstree-default .jstree-themeicon ,
+.jstree-default .jstree-open .jstree-themeicon,
+.jstree-default .jstree-open > .jstree-ocl,
+.jstree-default .jstree-closed > .jstree-ocl,
+.jstree-default.jstree-checkbox-selection .jstree-clicked > .jstree-checkbox,
+.jstree-default .jstree-checkbox,
+.jstree-default .jstree-anchor > .jstree-undetermined
+{
+	padding-top: 3px;
+	background-image: none;
+    font-size: 18px;
+    line-height: 14px;
+    margin-top: 1px;
+    font-smoothing: grayscale;
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+}
+.jstree-default .jstree-clicked,.jstree-default .jstree-hovered {
+    background: none repeat scroll 0 0 #ffffff;
+    border-radius: 3px;
+    box-shadow: 0 0 1px #888 inset;
+    margin: 1px;
+}
+.jstree-anchor, .jstree-anchor:link, .jstree-anchor:visited, .jstree-anchor:hover, .jstree-anchor:active {
+    color: inherit;
+    text-decoration: none;
+    margin: 1px;
+}

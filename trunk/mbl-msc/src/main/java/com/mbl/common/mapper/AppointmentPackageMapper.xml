@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.AppointmentPackageMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.vo.AppointmentPackageVO" >
+    <id column="ap_id" property="apId" jdbcType="VARCHAR" />
+    <result column="appointment_id" property="appointmentId" jdbcType="VARCHAR" />
+    <result column="pkg_id" property="pkgId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="pkg_name" property="pkgName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ap_id, appointment_id, pkg_id, creation_date, creation_by, last_update_date, last_update_by, 
+    description, pkg_name
+  </sql>
+  <select id="getAppointmentPackageById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_appointment_package
+    where appointment_id = #{appointmentId,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="findAppointmentPackagebyParams" resultType="com.mbl.common.bean.AppointmentPackage" parameterType="java.lang.String" >
+    select ap_id apId, appointment_id appointmentId, pkg_id pkgId, creation_date creationDate, creation_by creationBy, 
+    last_update_date lastUpdateDate, last_update_by lastUpdateBy, description, pkg_name pkgName
+    from m_appointment_package
+    where appointment_id = #{appointmentId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_appointment_package
+    where ap_id = #{apId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.AppointmentPackage" >
+    insert into m_appointment_package
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="apId != null" >
+        ap_id,
+      </if>
+      <if test="appointmentId != null" >
+        appointment_id,
+      </if>
+      <if test="pkgId != null" >
+        pkg_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="pkgName != null" >
+        pkg_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="apId != null" >
+        #{apId,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmentId != null" >
+        #{appointmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null" >
+        #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgName != null" >
+        #{pkgName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insertbatch" parameterType="java.util.List" >
+  	insert into m_appointment_package(ap_id, appointment_id, pkg_id, creation_date, 
+    			creation_by, last_update_date, last_update_by,description, pkg_name)
+    values
+	<foreach collection="list" item="item" index="index" separator=",">
+        (#{item.apId,jdbcType=VARCHAR},
+        #{item.appointmentId,jdbcType=VARCHAR},
+        #{item.pkgId,jdbcType=VARCHAR},
+        #{item.creationDate,jdbcType=TIMESTAMP},
+        #{item.creationBy,jdbcType=VARCHAR},
+        #{item.lastUpdateDate,jdbcType=TIMESTAMP},
+        #{item.lastUpdateBy,jdbcType=VARCHAR},
+        #{item.description,jdbcType=VARCHAR},
+        #{item.pkgName,jdbcType=VARCHAR})
+	</foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.AppointmentPackage" >
+    update m_appointment_package
+    <set >
+      <if test="appointmentId != null" >
+        appointment_id = #{appointmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null" >
+        pkg_id = #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgName != null" >
+        pkg_name = #{pkgName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ap_id = #{apId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -1,0 +1,118 @@
+<!-- modal begin -->
+  <!--  Modal content for the above example -->
+<div class="modal fade modal-scroll" id="shopPkgEditModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-replace="true">
+    <div class="modal-dialog modal-lg" style="width:85%;">
+      	<div class="modal-content">
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">
+	          <span aria-hidden="true">&times;</span>
+	          <span class="sr-only">Close</span>
+	          </button>
+	          <h4 class="modal-title" id="myLargeModalLabel">添加套餐</h4>
+	        </div>
+	        <div class="modal-body row">
+ 				<form class="form-horizontal" role="form" id="baseinfo-shoppkg-form">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐简称:
+								</label>
+								<div class="col-sm-7"> 
+									<input id="" name="pkgName" 
+	                             		ng-model="shopPackageVO.pkgName" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐类型:</label>
+								<div class="col-sm-7">
+									<select name="pkgType" class="input-xlarge input-sm error-span" type="text" ng-model="shopPackageVO.pkgType"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_pkg_type">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐限制数</label>
+								<div class="col-sm-7">
+									<input id="" name="pkgNum" 
+	                             		ng-model="shopPackageVO.pkgNum" class="input-xlarge input-sm error-span" type="text"/>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐金额:</label>
+								<div class="col-sm-7">
+									<input id="" name="pkgPrice" 
+	                             		ng-model="shopPackageVO.pkgPrice" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐开始日期:</label>
+								<div class="col-sm-7">
+									<input id="cooperateStartDate" name="pkgStartDate"  readonly
+										my-datepicker-model="shopPackageVO.pkgStartDate"
+	                             		ng-model="shopPackageVO.pkgStartDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									套餐结束日期:</label>
+								<div class="col-sm-7">
+									<input id="cooperateEndDate" name="pkgEndDate"  readonly
+										my-datepicker-model="shopPackageVO.pkgEndDate"
+	                             		ng-model="shopPackageVO.pkgEndDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-2 control-label no-padding-right" for="">
+									适用车型:</label>
+								<div class="col-sm-8">
+									<input name="applyModel" ng-model="shopPackageVO.applyModel" class="input-xxlarge input-sm error-span" type="text"/>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-2 control-label no-padding-right" for="">
+									套餐内容:</label>
+								<div class="col-sm-7">
+									<textarea name="pkgContent" ng-model="shopPackageVO.pkgContent" class="input-xxlarge input-sm error-span"  
+										rows="5" cols="50">
+									</textarea>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-2 control-label no-padding-right" for="">
+									套餐描述:</label>
+								<div class="col-sm-8">
+									<textarea name="description" ng-model="shopPackageVO.description" class="input-xxlarge input-sm error-span"  
+										rows="5" cols="90">
+									</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+	        </div>
+	        <div class="modal-footer"> 
+				<div class="row">
+					<center class="submit col-sm-12"><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-primary btn-r-primary  btn-radius" ng-click="saveOk()" ng-if="!viewFlag">
+						<i class="ace-icon fa fa-check bigger-110"></i>确 定</button>
+						<button class="btn btn-default btn-r-default  btn-radius" data-dismiss="modal"> <i class="ace-icon fa fa-times bigger-110"></i>关 闭</button>
+					</center>
+				</div> 
+			</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- modal end -->
+<script type="text/javascript">
+	require(['plat/shop/form'],function(form){
+		form.init();
+	});
+</script>

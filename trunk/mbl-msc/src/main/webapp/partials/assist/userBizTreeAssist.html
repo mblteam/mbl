@@ -1,0 +1,64 @@
+<style>
+	.subcompany_div{padding: 3px 4px;border:1px solid #ddd;}
+	.subcompany_select_div{background-color:#6699ff; color:#ffffff;}
+</style>
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">选择用户</h4>
+</div>	
+<div class="modal-body" style="padding-top:10px !important;padding-bottom:10px !important">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+        	<div class="row">
+             	<div class="col-xs-6">
+					<div class="tree_border" style="height:400px;border-radius: 4px;">
+						<div id="jstree_userBizTree"></div>
+					</div>
+				</div>
+				<div class="col-xs-6">
+					<div style="height:400px;border:1px solid #ddd;border-radius: 4px; overflow-y:auto;"
+						id="fromUser">
+						<span class="input-icon">
+							<input type="text" placeholder="用户搜索 ..." style="width:300px;" class="nav-search-input input-sm" autocomplete="off" ng-model="search.userName"
+								ng-keyup="onEnterSearch()">
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<table class="table table-condensed">
+							<thead>
+								<tr>
+									<th>账号</th>
+									<!-- <th>用户编号</th>
+									<th>登录名</th>
+									<th>邮箱</th>
+									<th>电话</th> -->
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="user in userListPage.data" class="subcompany_div" ng-click="updateCurrentRow(user)"
+									onclick="$(this).addClass('subcompany_select_div');$(this).siblings().removeClass('subcompany_select_div')">
+									<td>{{user.accountName}}</td>
+									<!-- <td>{{user.loginName}}</td>
+									<td>{{user.email}}</td>
+									<th>{{user.phone}}</th> -->
+								</tr>
+							</tbody>
+						</table>
+						<div plat-paging="userListPage" plat-form="search"></div>
+					</div>
+				</div>
+           </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div style="width: 97%;">
+			<button type="submit" class="btn btn-success btn-sm btn-radius btn-r-success title_add_btn" style="margin-right:5px" ng-click="ok()" ng-disabled="currentRow==-1"><i class="ace-icon fa fa-check bigger-110"></i>&nbsp;选择</button>
+			<button type="submit" class="btn btn-danger btn-r-danger btn-sm btn-radius" ng-click="cancel()"><i class="ace-icon fa fa-ban bigger-110"></i>&nbsp;关闭</button>
+		</div>
+	</div>
+</div>
+ 

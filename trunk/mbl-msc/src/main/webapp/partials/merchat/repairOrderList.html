@@ -1,0 +1,96 @@
+<div class="page-content-area">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+					<div class="row"> 
+						<div class="form-group col-xs-12">
+							<div class="form-group col-xs-4">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									订单号:</label>
+								<div class="col-sm-7">
+									<input ng-model="search.orderNo" class="input-xlarge input-sm" type="text" maxlength="50"/> 
+								</div>
+							</div>
+							<div class="form-group col-xs-4">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									车主:</label>
+								<div class="col-sm-7">
+									<input ng-model="search.userName" class="input-xlarge input-sm" type="text" maxlength="50"/> 
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+	            <div class="hr hr-8 solid dotted-bottom search-hr">
+	                <span class="search-tool" ng-click="onsearch()">
+	                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+	                </span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-10 height25">
+	                </div>
+	            </div>
+	            <div class="hr hr-8 hr-double dotted"></div>
+	            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list   table-condensed  checked-0">
+                            <thead>
+                                <tr>
+                                   <th width="5%">序号</th>
+                                   <th>订单号</th>
+								   <th>店铺名称</th>
+								   <th>车主</th>
+								   <th>下单时间</th>
+								   <!-- <th>是否支付</th> -->
+								   <th>应付金额</th>
+								   <th>折扣</th>
+								   <th>实付金额</th>
+								   <!-- <th>是否使用积分</th>
+								   <th>是否使用优惠券</th> -->
+								   <th>支付方式</th>
+								   <th>订单类型</th>
+								   <!--<th>使用积分数</th> -->
+								   <th>订单状态</th>
+								   <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in dataList.data">
+	                                <td>{{$index+1}}</td>
+	                                <td>{{item.orderNo}}</td>
+	                                <td>{{item.shopName}}</td>
+	                                <td>{{item.userName}}</td>
+	                                <td>{{item.orderTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+	                                <!-- <td>{{item.isPay }}</td> -->
+	                                <td>{{item.price | number:2}}
+	                                	<a ng-if="item.status==1" class="blue" href="javascript:;" ng-click="settingPrice(dataList.data,$index)">
+											设置价格
+										</a>
+	                                </td>
+	                                <td>{{item.discount | number:2}}</td>
+	                                <td>{{item.paid | number:2}}</td>
+	                              <!--   <td>{{item.isUsePointName}}</td>
+	                                <td>{{item.isUseCouponName}}</td> -->
+	                                <td>{{item.payTypeName}}</td>
+	                                <td>{{dictMap_order_type[item.orderType][0]['dictValue']}}</td>
+	                              <!--  <td>{{item.usePoint}}</td> -->
+	                                <td>{{dictMap_order_status[item.status][0]['dictValue']}}</td>
+	                                <td>
+										<div class="hidden-sm hidden-xs action-buttons">
+	                                        <a class="green" href="javascript:;" ng-click="showOrderDetail(item.orderId)">
+												<i class="ace-icon fa fa-search bigger-130"></i>详情
+											</a>
+	                                     </div>
+									</td> 
+                             	</tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="dataList" plat-form="search"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'partials/order/modal/orderDetail.html'"></div>

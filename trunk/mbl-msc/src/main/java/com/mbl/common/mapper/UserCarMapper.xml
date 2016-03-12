@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.UserCarMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.bean.UserCar" >
+    <id column="car_id" property="carId" jdbcType="VARCHAR" />
+    <result column="brand" property="brand" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="car_type" property="carType" jdbcType="VARCHAR" />
+    <result column="series_name" property="seriesName" jdbcType="VARCHAR" />
+    <result column="car_plate_no" property="carPlateNo" jdbcType="VARCHAR" />
+    <result column="product_year" property="productYear" jdbcType="VARCHAR" />
+    <result column="mileage" property="mileage" jdbcType="DECIMAL" />
+    <result column="onroad_time" property="onroadTime" jdbcType="DATE" />
+    <result column="displacement" property="displacement" jdbcType="VARCHAR" />
+    <result column="photo" property="photo" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="car_status" property="carStatus" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="appointment_flag" property="appointmentFlag" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    car_id, car_type, brand, product_year, mileage, onroad_time, displacement, photo, 
+    creation_date, creation_by, last_update_date, last_update_by, car_status, account_id,appointment_flag
+  </sql>
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_user_car
+    where car_id = #{carId,jdbcType=VARCHAR}
+  </select>
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_user_car
+    where car_id = #{carId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.UserCar" >
+    insert into m_user_car
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="carId != null" >
+        car_id,
+      </if>
+      <if test="brand != null" >
+        brand,
+      </if>
+      <if test="brandName != null" >
+        brand_name,
+      </if>
+      <if test="carType != null" >
+        car_type,
+      </if>
+      <if test="seriesName != null" >
+        series_name,
+      </if>
+      <if test="carPlateNo != null" >
+        car_plate_no,
+      </if>
+      <if test="productYear != null" >
+        product_year,
+      </if>
+      <if test="mileage != null" >
+        mileage,
+      </if>
+      <if test="onroadTime != null" >
+        onroad_time,
+      </if>
+      <if test="displacement != null" >
+        displacement,
+      </if>
+      <if test="photo != null" >
+        photo,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="carStatus != null" >
+        car_status,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="appointmentFlag != null" >
+        appointment_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="carId != null" >
+        #{carId,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null" >
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null" >
+        #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null" >
+        #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesName != null" >
+        #{seriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="carPlateNo != null" >
+        #{carPlateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productYear != null" >
+        #{productYear,jdbcType=VARCHAR},
+      </if>
+      <if test="mileage != null" >
+        #{mileage,jdbcType=DECIMAL},
+      </if>
+      <if test="onroadTime != null" >
+        #{onroadTime,jdbcType=DATE},
+      </if>
+      <if test="displacement != null" >
+        #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null" >
+        #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="carStatus != null" >
+        #{carStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+       <if test="appointmentFlag != null" >
+       	#{appointmentFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.UserCar" >
+    update m_user_car
+    <set >
+      <if test="brand != null and brand!=''" >
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="brandName != null and brandName!=''" >
+        brand_name = #{brandName,jdbcType=VARCHAR},
+      </if>
+      <if test="carType != null and carType!=''" >
+        car_type = #{carType,jdbcType=VARCHAR},
+      </if>
+      <if test="seriesName != null and seriesName!=''" >
+        series_name = #{seriesName,jdbcType=VARCHAR},
+      </if>
+      <if test="carPlateNo != null and carPlateNo!=''" >
+        car_plate_no = #{carPlateNo,jdbcType=VARCHAR},
+      </if>
+      <if test="productYear != null and carType!=''" >
+        product_year = #{productYear,jdbcType=VARCHAR},
+      </if>
+      <if test="mileage != null" >
+        mileage = #{mileage,jdbcType=DECIMAL},
+      </if>
+      <if test="onroadTime != null" >
+        onroad_time = #{onroadTime,jdbcType=DATE},
+      </if>
+      <if test="displacement != null and displacement != ''" >
+        displacement = #{displacement,jdbcType=VARCHAR},
+      </if>
+      <if test="photo != null and photo != ''" >
+        photo = #{photo,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null and creationBy != ''" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null and lastUpdateBy != ''" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="carStatus != null and carStatus != ''" >
+        car_status = #{carStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null and accountId != ''" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmentFlag != null and appointmentFlag != ''" >
+       	appointment_flag = #{appointmentFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where car_id = #{carId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="findListByParams" resultMap="BaseResultMap" parameterType="map" >
+    select 
+    	muc.car_id carId, 
+    	muc.brand,
+    	mcb.brand_name brandName,
+		muc.car_type carType,
+		mcs.series seriesName, 
+		muc.car_plate_no carPlateNo,
+		muc.product_year productYear, 
+		muc.mileage mileage, 
+		muc.onroad_time 	onroadTime, 
+		muc.displacement 	displacement, 
+		muc.photo 	photo, 
+		muc.creation_date 	creationDate, 
+		muc.creation_by 	creationBy, 
+		muc.last_update_date 	lastUpdateDate, 
+		muc.last_update_by 	lastUpdateBy, 
+		muc.car_status 	carStatus, 
+		muc.account_id	accountId,
+		muc.appointment_flag	appointmentFlag
+    from m_user_car muc
+    left join m_car_brand mcb on mcb.cb_id = muc.brand
+	left join m_car_series mcs on mcs.cs_id = muc.car_type
+    where 
+    	 muc.car_status=1
+    	 and muc.account_id = #{accountId,jdbcType=VARCHAR} 
+  </select>
+  
+</mapper>

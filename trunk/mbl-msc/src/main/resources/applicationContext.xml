@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans  xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	 xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.0.xsd
+		http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.0.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/data/mongo http://www.springframework.org/schema/data/mongo/spring-mongo.xsd
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd"
+	default-lazy-init="true">
+
+	<context:component-scan base-package="com.mbl">
+		<context:include-filter type="regex" expression=".*.biz"/>
+	  	<context:include-filter type="regex" expression=".*.mapper"/>
+	</context:component-scan>
+	
+	<!--
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName" value="jdbc/sjfx"></property>
+		<property name="resourceRef">
+			<value>true</value>
+		</property>
+	</bean> -->
+	
+	<import resource="classpath*:deploy-bean.xml"/>
+	 
+	 <!-- 引入属性文件 --> 
+	<context:property-placeholder location="classpath:application.properties"/>
+	
+	<!-- 配置数据源 --> 
+	<bean name="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">  
+        <property name="url" value="${jdbc.url}" />  
+        <property name="username" value="${jdbc.username}" />  
+        <property name="password" value="${jdbc.password}" />  
+        <property name="initialSize" value="1" />  
+        <property name="maxActive" value="${jdbc.pool.maxActive}" />  
+        <property name="minIdle" value="1" />  
+        <property name="maxIdle" value="${jdbc.pool.maxIdle}"/>
+        <property name="maxWait" value="60000" />  
+        <!-- <property name="validationQuery" value="${validationQuery}" /> --> 
+        <property name="testOnBorrow" value="false" />  
+        <property name="testOnReturn" value="false" />  
+        <property name="testWhileIdle" value="true" />  
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />  
+        <property name="minEvictableIdleTimeMillis" value="25200000" />  
+        <property name="removeAbandoned" value="true" />  
+        <property name="removeAbandonedTimeout" value="1800" />  
+        <property name="logAbandoned" value="true" />  
+        <property name="filters" value="mergeStat" />  
+	</bean>
+	
+	<bean id="urlConfig"
+		class="com.mbl.common.constant.UrlConfig">
+		<property name="loginDns" value="${km.login.dns}" />
+		<property name="port" value="${km.port}" />
+		<property name="plDns" value="${km.pl.dns}" />
+		<property name="plContext" value="${km.pl.context}" />
+		<property name="domain" value="${km.domain}" />
+	</bean>
+ 	
+	<!-- SqlSessionFactory -->
+	<!-- 分页 -->
+	<bean id="paginationInterceptor" class="com.mbl.common.framework.interceptor.PaginationInterceptor"></bean>
+	
+	
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
+		<property name="plugins">
+	        <array>
+	            <ref bean="paginationInterceptor"/>
+	        </array>
+    	</property>
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<!-- Mapper接口所在包名，Spring会自动查找其下的Mapper -->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.mbl.**.mapper" />
+	</bean>
+
+	<!-- ================================事务相关控制================================================= -->
+	<bean name="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+
+	<tx:advice id="userTxAdvice" transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="del*" propagation="REQUIRED" rollback-for="java.lang.Exception" no-rollback-for="java.lang.RuntimeException" />
+			<tx:method name="save*" propagation="REQUIRED" rollback-for="java.lang.RuntimeException" />
+			<tx:method name="add*" propagation="REQUIRED" rollback-for="java.lang.RuntimeException" />
+			<tx:method name="update*" propagation="REQUIRED" rollback-for="java.lang.Exception" />
+			<tx:method name="query*" propagation="SUPPORTS"/>
+			<tx:method name="find*" propagation="SUPPORTS"/>
+			<tx:method name="is*" propagation="SUPPORTS"/>
+            <tx:method name="*" rollback-for="java.lang.Exception" />
+            
+		</tx:attributes>
+	</tx:advice>
+	<aop:config>
+		<aop:pointcut id="pc"
+			expression="execution(public * com.mbl.*.*.biz.*.*(..))" /> <!--把事务控制在Service层 -->
+		<aop:advisor pointcut-ref="pc" advice-ref="userTxAdvice" />
+	</aop:config>
+ 	<!--<import resource="classpath:META-INF/cxf/cxf.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+    <import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+     <jaxws:endpoint id="WSDemoServer" implementor="com.jhxh.mailserver.webservice.service.WSDemoServerImpl" address="/WSDemoServer">
+	    
+	    <jaxws:inInterceptors>
+			<ref bean="soapAuth"/>
+		</jaxws:inInterceptors> 
+    </jaxws:endpoint>
+    <bean id="soapAuth" class="com.jhxh.mailserver.webservice.service.auth.SOAPAuthIntercepter">
+    	<property name="token" value="zwych-gjxt-txrc-guoll"></property>
+    </bean>
+    -->
+</beans>

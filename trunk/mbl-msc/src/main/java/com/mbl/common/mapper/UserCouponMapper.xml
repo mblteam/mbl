@@ -1,0 +1,205 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.UserCouponMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.bean.UserCoupon" >
+    <id column="uc_id" property="ucId" jdbcType="VARCHAR" />
+    <result column="coupon_id" property="couponId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="send_date" property="sendDate" jdbcType="TIMESTAMP" />
+    <result column="disable_date" property="disableDate" jdbcType="TIMESTAMP" />
+    <result column="send_date_str" property="sendDateStr" jdbcType="VARCHAR" />
+    <result column="disable_date_str" property="disableDateStr" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    uc_id, coupon_id, user_id, creation_date, creation_by, last_update_date, last_update_by, 
+    order_id, send_date, disable_date, status
+  </sql>
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_user_coupon
+    where uc_id = #{ucId,jdbcType=VARCHAR}
+  </select>
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_user_coupon
+    where uc_id = #{ucId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.UserCoupon" >
+    insert into m_user_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="ucId != null" >
+        uc_id,
+      </if>
+      <if test="couponId != null" >
+        coupon_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="orderId != null" >
+        order_id,
+      </if>
+      <if test="sendDate != null" >
+        send_date,
+      </if>
+      <if test="disableDate != null" >
+        disable_date,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="ucId != null" >
+        #{ucId,jdbcType=VARCHAR},
+      </if>
+      <if test="couponId != null" >
+        #{couponId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendDate != null" >
+        #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disableDate != null" >
+        #{disableDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.UserCoupon" >
+    update m_user_coupon
+    <set >
+      <if test="couponId != null" >
+        coupon_id = #{couponId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="sendDate != null" >
+        send_date = #{sendDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="disableDate != null" >
+        disable_date = #{disableDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uc_id = #{ucId,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="findListByParams" resultMap="BaseResultMap" parameterType="map" >
+    select 
+	    c.coupon_id, 
+	    c.coupon_type, 
+	    c.coupon_name, 
+	    c.description, 
+	    c.coupon_worth, 
+	    c.coupon_start_date, 
+	    c.coupon_end_date, 
+	    c.coupon_status, 
+	    c.creation_date, 
+	    c.creation_by, 
+	    c.last_update_date, 
+	    c.last_update_by, 
+	    c.effective_day
+    from m_user_coupon uc
+    left join m_coupon c on uc.coupon_id = c.coupon_id
+    where uc.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findUserCouponListByParams" resultType="com.mbl.rest.coupon.vo.UserCouponVo" parameterType="map" >
+    select 
+        uc.uc_id  	ucId , 
+		uc.coupon_id  	couponId , 
+		uc.user_id 	userId, 
+		uc.creation_date 	creation_Date, 
+		uc.creation_by 	creationBy, 
+		uc.last_update_date 	lastUpdateEate, 
+		uc.last_update_by 	lastUpdateBy, 
+		uc.order_id 	orderId, 
+		uc.send_date 	sendDate, 
+		uc.disable_date 	disableDate, 
+		DATE_FORMAT(uc.send_date, '%Y-%m-%d') sendDateStr, 
+		DATE_FORMAT(uc.disable_date, '%Y-%m-%d') disableDateStr, 
+		uc.status	status,
+		ucs.dict_value statusName,
+		c.coupon_type 	couponType,
+		uct.dict_value couponTypeName, 
+		c.coupon_name 	couponName, 
+		c.description 	description, 
+		c.coupon_worth 	couponWorth, 
+		c.coupon_start_date 	couponStartDate, 
+		c.coupon_end_date 	couponEndDate, 
+		c.coupon_status 	couponStatus, 
+		c.effective_day	effectiveDay
+    from m_user_coupon uc
+    left join m_coupon c on uc.coupon_id = c.coupon_id
+    left join (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'user_coupon_status'
+           AND dh.dict_status = '1') ucs ON uc.status = ucs.dict_code 
+    left join (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'coupon_type'
+           AND dh.dict_status = '1') uct ON c.coupon_type = uct.dict_code 
+    where uc.user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  
+</mapper>

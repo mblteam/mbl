@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.DictLineMapper">
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.DictLine" />
+
+	<resultMap id="baseResultMap" type="com.mbl.common.bean.DictLine">
+		<id column="dict_line_id" property="dictLineId" jdbcType="VARCHAR" />
+	    <result column="dict_head_id" property="dictHeadId" jdbcType="VARCHAR" />
+	    <result column="dict_code" property="dictCode" jdbcType="VARCHAR" />
+	    <result column="dict_value" property="dictValue" jdbcType="VARCHAR" />
+	    <result column="line_status" property="lineStatus" jdbcType="VARCHAR" />
+	    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+	    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="findListByHeadId" resultType="com.mbl.common.bean.DictLine" parameterType="java.lang.String">
+		select
+			line.dict_line_id dictLineId,
+			line.dict_head_id dictHeadId,
+			line.dict_code dictCode,
+			line.dict_value dictValue,
+			line.last_update_date lastUpdateDate
+		from m_dict_head head
+		left join m_dict_line line ON head.dict_id = line.dict_head_id
+		where
+		1=1
+			and line.dict_head_id = #{headId,jdbcType=VARCHAR}
+			order by lastUpdateDate desc
+	</select>
+	
+	<insert id="save" parameterMap="baseParameterMap">
+		insert into m_dict_line (dict_line_id,dict_head_id,dict_code,dict_value,line_status,creation_date,creation_by,last_update_date,last_update_by)
+		VALUES(#{dictLineId,jdbcType=VARCHAR},#{dictHeadId,jdbcType=VARCHAR},
+			   #{dictCode,jdbcType=VARCHAR},#{dictValue,jdbcType=VARCHAR},#{lineStatus,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+			   #{lastUpdateBy,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterMap="baseParameterMap">
+		update m_dict_line
+		<set >
+			<if test="dictHeadId != null" >
+	      		dict_head_id=#{dictHeadId,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="dictCode != null" >
+	      		dict_code=#{dictCode,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="dictValue != null" >
+	      		dict_value=#{dictValue,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="lineStatus != null" >
+	      		line_status=#{lineStatus,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="creationDate != null" >
+	      		creation_date=#{creationDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="creationBy != null" >
+	      		creation_by=#{creationBy,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="lastUpdateDate != null" >
+	      		last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="lastUpdateBy != null" >
+	      		last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+	      	</if>
+     </set> 
+	WHERE dict_line_id=#{dictLineId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据id删除某个字典 -->
+	<delete id="delById">
+		delete from m_dict_line where dict_line_id=#{dictLineId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 映射字段 -->
+	<sql id="base_column_list" >
+		dict_line_id dictLineId,dict_head_id dictHeadId,dict_code dictCode,dict_value dictValue,line_status,lineStatus,creation_Date creationDate,creation_By creationBy,
+		last_Update_Date lastUpdateDate,last_Update_By lastUpdateBy
+	</sql>
+	<!-- 根据条件查询角色  -->
+	<select id="findListByParams" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_dict_line where 1=1
+		 <if test="dictCode!=null and dictCode!=''">AND dict_code like '%${dictCode}%'</if>
+		 <if test="dictValue!=null and dictValue!=''">AND dict_value like '%${dictValue}%'</if>
+		 <if test="lineStatus!=null and lineStatus!=''">AND line_status = #{lineStatus,jdbcType=VARCHAR}</if>
+		 order by last_update_date desc
+	</select>
+	<!-- 根据条件查询角色数量 -->
+	<select id="getCountByParams" resultType="Long">
+		SELECT count(1)
+		FROM m_dict_line where 1=1
+		 <if test="dictLineId!=null and dictLineId!=''">AND dict_line_id=#{dictLineId,jdbcType=VARCHAR}</if>
+		 <if test="dictCode!=null and dictCode!=''">AND dict_code like '%${dictCode}%'</if>
+		 <if test="dictValue!=null and dictValue!=''">AND dict_value like '%${dictValue}%'</if>
+		 <if test="lineStatus!=null and lineStatus!=''">AND line_status = #{lineStatus,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<!-- 根据字典头id获取字典行条数 -->
+	<select id="getCountByDictHeadId" resultType="Long" parameterType="java.lang.String">
+		SELECT count(1)
+		FROM m_dict_line where 1=1 and dict_head_id= #{dictHeadId,jdbcType=VARCHAR}
+	</select>
+</mapper>

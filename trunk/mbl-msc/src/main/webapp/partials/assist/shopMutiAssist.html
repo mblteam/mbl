@@ -1,0 +1,126 @@
+<div class="modal-header">
+	<button type="button" class="close" ng-click="cancel()">
+    <span aria-hidden="true">&times;</span>
+    <span class="sr-only">Close</span>
+    </button>
+    <h4 class="modal-title">选择门店</h4>
+</div>	
+<div class="modal-body" style="padding-top:10px !important;padding-bottom:10px !important">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+                <div class="row">
+					<div class="form-group col-xs-12">
+						<label class="col-sm-1 control-label no-padding-right" for="">店铺名称:</label>
+						<div class="col-sm-3">
+							<input class="input-large input-sm" type="text" ng-model="search.shopName" /> 
+						</div>
+			 			<label class="col-sm-1 control-label no-padding-right" for="">合作状态:</label>
+						<div class="col-sm-3">
+							<select class="input-large input-sm" type="text" ng-model="search.cooperateStatus"
+								ng-options="dict.dictCode as dict.dictValue for dict in dict_cooperate_status">
+								<option value="">--请选择--</option>
+							</select>
+						</div>
+						<label class="col-sm-1 control-label no-padding-right" for="">结算方式:</label>
+						<div class="col-sm-3">
+							<select class="input-large input-sm" type="text" ng-model="search.balanceType"
+								ng-options="dict.dictCode as dict.dictValue for dict in dict_balance_type">
+								<option value="">--请选择--</option>
+							</select>
+						</div>
+					</div>
+                </div>
+            </form>
+            <div class="hr hr-8 solid dotted-bottom search-hr height25" style="border-top-width: 1px;">
+                <span class="search-tool" ng-click="query()" >
+                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+                </span>
+            </div>
+            <div class="hr hr-8 hr-double dotted"></div>
+            
+            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list table-condensed ">
+                            <thead>
+                                <tr>
+                                	<th class="center">
+										<label class="position-relative">
+											<input type="checkbox" class="ace" ng-model="customerAssistCheckbox" ng-change="toggleCheckbox(customerAssistCheckbox, list.data, 'checked')"/>
+											<span class="lbl"></span>
+										</label>
+									</th>
+								   <th width="5%">编号</th>
+								   <th width="10%">名称</th>
+								   <th width="5%">经度</th>
+								   <th width="5%">纬度</th>
+								   <th width="10%">合同折扣上限</th>
+								   <th width="10%">合同折扣下限</th>
+								   <th width="5%">合作状态</th>
+								   <th width="5%">结算方式</th>
+								   <th width="8%">联系方式</th>
+								   <th width="5%">店铺类型</th>
+								   <th width="5%">店铺状态</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr ng-repeat="data in list.data">
+                                	<td class="center">
+										<label class="position-relative">
+											<input type="checkbox" name="customerCheckBox"  ng-model="data.checked"  value="{{$index}}" ng-click="updateCurrentRow(data,$index)"/>
+											<span class="lbl"></span>
+										</label>
+									</td>
+                                     <td>
+	                                	{{data.shopCode}}
+	                                </td>
+	                                <td>
+	                                	{{data.shopName}}
+	                                </td>
+	                                <td>
+	                                	{{data.longitude}}
+	                                </td>
+	                                <td>
+	                                	{{data.latitude}}
+	                                </td>
+	                                <td>
+	                                	{{data.discountUpperLimit}}
+	                                </td>
+	                                <td>
+	                                	{{data.discountLowerLimit}}
+	                                </td>
+	                                <td>
+	                                	{{data.cooperateStatusName}}
+	                                </td>
+	                                <td>
+	                                	{{data.balanceTypeName}}
+	                                </td>
+	                                <td>
+	                                	{{data.tel}}
+	                                </td>
+	                                <td>
+	                                	{{data.shopTypeName}}
+	                                </td>
+	                                <td>
+	                                	{{data.shopStatusName}}
+	                                </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="list" plat-form="search"  page-do="toggleCheckboxNo"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<div class="modal-footer">
+	<div class="row">
+		<div style="width: 97%;">
+			<button type="submit" class="btn btn-success btn-sm btn-radius btn-r-success title_add_btn" style="margin-right:5px" ng-click="ok()" ng-disabled="currentRow==-1"><i class="ace-icon fa fa-check bigger-110"></i>&nbsp;选择</button>
+			<button type="submit" class="btn btn-danger btn-r-danger btn-sm btn-radius" ng-click="cancel()"><i class="ace-icon fa fa-ban bigger-110"></i>&nbsp;关闭</button>
+		</div>
+	</div>
+</div>

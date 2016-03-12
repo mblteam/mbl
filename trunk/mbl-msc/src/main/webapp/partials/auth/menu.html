@@ -1,0 +1,159 @@
+	<!-- /section:settings.box -->
+	<div class="page-content-area">
+
+
+		<div class="row">
+
+			<div class="col-xs-12 form-contain">  
+			 
+				<div class="row">
+					<div class="col-xs-10">
+						<button class="btn btn-primary btn-r-primary btn-sm btn-radius title_add_btn" data-toggle="modal" ng-click="showAddMenuModal();"><i class="ace-icon glyphicon glyphicon-plus bigger-110" ></i>&nbsp;添 加</button>
+						<button class="btn btn-success btn-sm btn-radius btn-r-success" ng-click="showEditMenuModal()"><i class="ace-icon fa fa-pencil bigger-110"></i>&nbsp;编 辑</button>
+						<button class="btn btn-danger btn-r-danger btn-sm btn-radius" ng-click="deleteMenu()"><i class="ace-icon fa fa-trash-o bigger-110"></i>&nbsp;删 除</button>
+					</div>
+				</div>
+				<div class="hr hr-8 hr-double dotted"></div>
+				<div class="row">
+					<div class="col-xs-6">
+						<span class="input-icon">
+							<input type="text" placeholder="菜单搜索 ..." class="nav-search-input input-sm" id="demo_q" autocomplete="off">
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<div class="tree_border">
+							<!-- <div id="tree1" class="tree"></div> -->
+							<div id="jstree_demo2"></div>
+						</div>
+					</div>
+					<div class="col-xs-6">
+						<br/><br/><br/><br/>
+						<form class="form-horizontal" role="form">
+							<div class="form-group col-xs-12">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									菜单代码:
+								</label>
+								<div class="col-sm-7">
+									<div class="form-control input-xlarge input-sm">
+										{{menuItem.menu.menuCode}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									菜单名称:
+								</label>
+								<div class="col-sm-7">
+									<div class="form-control input-xlarge input-sm">
+										{{menuItem.menu.menuName}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									菜单地址:
+								</label>
+								<div class="col-sm-7">
+									<div class="form-control input-xlarge input-sm">
+										{{menuItem.menu.menuUrl}}
+									</div>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									菜单序号:
+								</label>
+								<div class="col-sm-7">
+									<div class="form-control input-xlarge input-sm">
+										{{menuItem.menu.seq}}
+									</div>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+			</div><!-- /.col -->
+		</div><!-- /.row -->
+	</div><!-- /.page-content-area -->
+
+	<!-- 添加或修改菜单的弹出框 -->
+	<div id="modal-table" class="modal fade bs-example-modal-lg modal-scroll" tabindex="-1">
+		<div class="modal-dialog" style="width: 70%;">
+			<div class="modal-content">
+
+				<div class="modal-header">
+		          <button type="button" class="close" data-dismiss="modal">
+		          <span aria-hidden="true">&times;</span>
+		          <span class="sr-only">Close</span>
+		          </button>
+		          <h4 class="modal-title" id="myLargeModalLabel">添加新菜单</h4>
+		        </div>
+
+				<div class="modal-body">
+					
+					<div class="row" style="font-size:14px;">
+
+						<form class="form-horizontal" role="form" id="createMenu-form">
+							<div class="row">
+								<div class="form-group col-xs-12">
+									<label class="col-sm-4 control-label no-padding-right" for="">
+										<span class="required">*</span>菜单代码:
+									</label>
+									<div class="col-sm-7">
+										<input name="menuCode" ng-model="editMenuItem.menuCode" class="input-xlarge input input-sm error-span" type="text" maxlength="80"/> 
+									</div>
+								</div>
+								<div class="form-group col-xs-12">
+									<label class="col-sm-4 control-label no-padding-right" for="">
+										<span class="required">*</span>菜单名称:
+									</label>
+									<div class="col-sm-7">
+										<input name="menuName" ng-model="editMenuItem.menuName" class="input-xlarge input input-sm error-span" type="text" maxlength="80"/> 
+									</div>
+								</div>
+								<div class="form-group col-xs-12">
+									<label class="col-sm-4 control-label no-padding-right" for="">
+										菜单地址:
+									</label>
+									<div class="col-sm-7">
+										<input name="menuName" ng-model="editMenuItem.menuUrl" class="input-xlarge input input-sm error-span" type="text" maxlength="80"/> 
+									</div>
+								</div>
+								<div class="form-group col-xs-12">
+									<label class="col-sm-4 control-label no-padding-right" for="">
+										<span class="required">*</span>菜单序号:
+									</label>
+									<div class="col-sm-7">
+										<input name="seq" ng-model="editMenuItem.seq" class="input-xlarge input input-sm error-span" type="text" maxlength="80"/> 
+									</div>
+								</div>
+							</div>
+							
+							<div class="row" style="padding: 10px 20px;">
+								<div class="hr hr-18 dotted dotted-bottom" style="margin-left:20px;margin-right:20px;"></div>
+								<div class="col-sm-11">
+									<center class="submit"><!--col-xs-offset-10 col-xs-2 -->
+										<button class="btn btn-primary btn-r-primary  btn-radius" ng-click="save()" ng-disabled="isSaving">
+										<i class="ace-icon fa fa-plus bigger-110"></i>保存</button>
+										<button class="btn btn-default btn-r-default  btn-radius" data-dismiss="modal"> <i class="ace-icon fa fa-reply bigger-110"></i>取 消</button>
+									</center>
+								</div> 
+							</div>
+							
+						</form>
+					</div>
+
+				</div>
+
+			</div><!-- /.modal-content -->
+		</div><!-- /.modal-dialog -->
+	</div><!-- PAGE CONTENT ENDS -->
+
+	<script type="text/javascript">
+		require(['auth/menu/form'],function(form){
+			setTimeout(function(){
+				form.init();
+			},1000);
+		});
+	</script>
+

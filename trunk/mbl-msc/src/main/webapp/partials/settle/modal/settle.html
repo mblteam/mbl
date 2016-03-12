@@ -1,0 +1,74 @@
+<!-- modal begin -->
+  <!--  Modal content for the above example -->
+<div class="modal fade modal-scroll" id="settleModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-replace="true">
+    <div class="modal-dialog modal-lg" style="width:90%;">
+      	<div class="modal-content">
+
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">
+	          <span aria-hidden="true">&times;</span>
+	          <span class="sr-only">Close</span>
+	          </button>
+	          <h4 class="modal-title" id="myLargeModalLabel">结算</h4>
+	        </div>
+	        <div class="modal-body row">
+ 				<form class="form-horizontal" role="form" id="baseinfo-settle-form">
+					<div class="row">
+						<div class="col-xs-12">
+							<div class="form-group col-xs-6">
+								<label class="col-sm-3 control-label no-padding-right" for="">订单开始日期:</label>
+								<div class="col-sm-5">
+									<input id="orderTimeBegin" name="orderTimeBegin"  readonly
+											my-datepicker-model="settleVO.orderTimeBegin"
+		                             		ng-model="settleVO.orderTimeBegin" class="input-xlarge input-sm error-span" 
+		                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-3 control-label no-padding-right" for="">订单结束日期:</label>
+								<div class="col-sm-5">
+									<input id="orderTimeEnd" name="orderTimeEnd"  readonly
+											my-datepicker-model="settleVO.orderTimeEnd"
+		                             		ng-model="settleVO.orderTimeEnd" class="input-xlarge input-sm error-span" 
+		                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-3 control-label no-padding-right" for="">
+									结算方式:</label>
+								<div class="col-sm-5">
+									<select class="input-xlarge input-sm  error-span" type="text" name="balanceType"
+										ng-model="settleVO.balanceType"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_balance_type">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-3 control-label no-padding-right" for="">
+									店铺编号:
+								</label>
+								<div class="col-sm-5"> 
+									<input id="" name="shopCode" 
+	                             		ng-model="settleVO.shopCode" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							
+							
+						</div>
+					</div>
+				</form>
+	        </div>
+	        <div class="modal-footer"> 
+				<div class="row">
+					<center class="submit col-sm-12"><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-primary btn-r-primary  btn-radius" ng-click="saveSettle()">
+						<i class="ace-icon fa  fa-check bigger-110"></i>确 定</button>
+						<button class="btn btn-default btn-r-default  btn-radius" data-dismiss="modal"> <i class="ace-icon fa fa-times bigger-110"></i>关 闭</button>
+					</center>
+				</div> 
+			</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- modal end -->

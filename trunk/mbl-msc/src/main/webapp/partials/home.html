@@ -1,0 +1,844 @@
+  <!-- /section:settings.box -->
+  <div class="page-content-area">
+ 
+<style>
+
+
+
+text {
+  font: 8px sans-serif;
+}
+
+#skillmap .skills-wrapper {
+  margin-top: 10px;
+  overflow: auto;
+}
+#skillmap .skills-sunburst {
+  float: left;
+  width: 500px;
+  margin-left: -80px;
+}
+#skillmap .skills-sunburst svg {
+  font: 11px 'Source Sans Pro', sans-serif;
+  font-weight: 900;
+  cursor: pointer;
+}
+#skillmap .skills-chart {
+  float: right;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 15px;
+  margin: 80px 20px 0 0;
+}
+#skillmap .skills-chart .breadcumb-text {
+  font-size: 13px;
+  font-weight: 700;
+}
+#skillmap .skills-chart #skills-chart-line {
+  fill: none;
+  stroke-width: 3.5px;
+}
+#skillmap .skills-chart .axis path,
+#skillmap .skills-chart .axis line {
+  fill: none;
+}
+#skillmap .skills-chart .x-axis path,
+#skillmap .skills-chart .y-axis path {
+  stroke: #444;
+  stroke-width: 1px;
+  shape-rendering: geometricPrecision;
+}
+
+#circle circle {
+  fill: none;
+  pointer-events: all;
+}
+
+.group path {
+  fill-opacity: .5;
+}
+
+path.chord {
+  stroke: #000;
+  stroke-width: .25px;
+}
+
+#circle:hover path.fade {
+  display: none;
+}
+svg {
+  font: 8px sans-serif;
+}
+
+
+
+.node circle {
+  fill: #fff;
+  stroke: steelblue;
+  stroke-width: 1px;
+}
+
+.node {
+  font: 10px sans-serif;
+}
+
+.link {
+  fill: none;
+  stroke: #ccc;
+  stroke-width: 1px;
+}
+
+
+</style>
+    <div class="row" >
+      <div class="col-xs-12 ">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="widget-box transparent" >
+              <div class="widget-header widget-header-small">
+                <h4 class="widget-title blue smaller">
+                  <i class="ace-icon fa   fa-cogs green"></i>
+                  项目检测分析
+                </h4>  
+              </div>
+              <div class="widget-body padding-top-13 d3left">
+              
+              </div>
+            </div>
+          </div> 
+          <div class="col-xs-6">
+            <div class="widget-box transparent" >
+              <div class="widget-header widget-header-small">
+                <h4 class="widget-title blue smaller">
+                  <i class="ace-icon fa fa-bar-chart-o green"></i>
+                  项目关联分析
+                </h4>  
+              </div>
+              <div class="widget-body padding-top-13 d3right">
+              
+              </div>
+            </div>
+          </div> 
+       
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="widget-box transparent" >
+              <div class="widget-header widget-header-small">
+                <h4 class="widget-title blue smaller">
+                  <i class="ace-icon glyphicon glyphicon-list orange"></i>
+                  业绩报表
+                </h4>  
+              </div>
+              <div class="widget-body padding-top-13 charts">
+                <div id="skills">
+                  <div id="skillmap">
+                    <div class="skills-wrapper">
+                      <div class="skills-sunburst"></div>
+                      <div class="skills-chart">
+                        <div id="skills-chart-breadcrumb"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div> 
+       
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <div class="widget-box transparent" >
+              <div class="widget-header widget-header-small">
+                <h4 class="widget-title blue smaller">
+                  <i class="ace-icon glyphicon glyphicon-list orange"></i>
+                  业绩树
+                </h4>  
+              </div>
+              <div class="widget-body padding-top-13 trees">
+              
+              </div>
+            </div>
+          </div> 
+       
+        </div>
+
+
+
+
+
+        <!-- PAGE CONTENT ENDS -->
+      </div><!-- /.col -->
+    </div><!-- /.row -->
+  </div><!-- /.page-content-area -->
+
+
+
+
+
+
+
+
+   
+ 
+<script>
+
+'use strict';
+
+require(['d3'], function () {
+
+
+  setTimeout(function(){
+    showleft();
+    showright();
+    charts();
+    trees();
+
+  
+  
+},1000);
+    function trees(){
+      var width = 960,
+      height = 2200;
+
+      var cluster = d3.layout.cluster()
+          .size([height, width - 160]);
+
+      var diagonal = d3.svg.diagonal()
+          .projection(function(d) { return [d.y, d.x]; });
+
+      var svg = d3.select(".trees").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+        .append("g")
+          .attr("transform", "translate(40,0)");
+
+      d3.json("jsonFile/glare.json", function(error, root) {
+        var nodes = cluster.nodes(root),
+            links = cluster.links(nodes);
+
+        var link = svg.selectAll(".link")
+            .data(links)
+          .enter().append("path")
+            .attr("class", "link")
+            .attr("d", diagonal);
+
+        var node = svg.selectAll(".node")
+            .data(nodes)
+          .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; })
+
+        node.append("circle")
+            .attr("r", 4.5);
+
+        node.append("text")
+            .attr("dx", function(d) { return d.children ? -8 : 8; })
+            .attr("dy", 3)
+            .style("text-anchor", function(d) { return d.children ? "end" : "start"; })
+            .text(function(d) { return d.name; });
+      });
+
+      d3.select(self.frameElement).style("height", height + "px");
+    }
+    function charts(){
+
+      var skillsdata;
+
+      skillsdata = 
+      {
+        "金域": {
+          "Server & WinForm": {
+            "Protocol": {
+              "Propose": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 50, 50, 50],
+              "USSD": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 60, 50, 40, 30],
+              "UAP": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 60, 70, 50, 30],
+              "Socket Raw": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 50, 50, 50, 70, 80]
+            },
+            "Optimization": {
+              "Performance": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 40, 40, 50, 50, 50],
+              "Distribute": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 40, 50, 50],
+              "Stability": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 50, 60, 70, 80, 90]
+            },
+            "UI": {
+              "WinForm": [0, 0, 20, 40, 50, 50, 50, 50, 60, 80, 90, 95, 95, 95, 95],
+              "WPF": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 50],
+              "GDI": [0, 0, 0, 0, 0, 40, 50, 40, 40, 30, 30, 20, 20, 10, 5],
+              "DX": [0, 0, 0, 0, 0, 10, 50, 50, 40, 40, 30, 20, 10, 10, 5],
+              "Flash": [0, 0, 10, 30, 40, 50, 50, 40, 30, 20, 10, 5, 5, 5, 5]
+            },
+            "Algorithm": {
+              "Image Processing": [0, 0, 0, 0, 0, 0, 0, 10, 30, 50, 50, 50, 45, 45, 40],
+              "Face recognition": [0, 0, 0, 0, 0, 0, 0, 10, 40, 70, 60, 50, 40, 40, 40]
+            }
+          },
+          "Web Development": {
+            "Server Side": {
+              "Active Page": {
+                "ASP": [0, 0, 10, 30, 60, 60, 40, 20, 20, 20, 20, 20, 20, 20, 20],
+                "ASP.Net": [0, 0, 0, 0, 0, 0, 10, 30, 70, 80, 90, 90, 90, 90, 90]
+              },
+              "Node.js": {
+                "express": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30],
+                "npm": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 40]
+              },
+              "DB": {
+                "SqlServer": [0, 0, 0, 0, 0, 10, 20, 40, 40, 40, 60, 90, 90, 90, 80],
+                "Sqlite": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 20],
+                "Mongo": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30]
+              },
+              "Server": {
+                "IIS": [0, 10, 10, 30, 40, 40, 40, 60, 70, 70, 80, 80, 80, 80, 80],
+                "Apache": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 40]
+              },
+              "API": {
+                "OAuth2.0": [0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 40, 40, 40, 30, 30],
+                "WeChat": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30],
+                "Propose": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 40, 30]
+              }
+            },
+            "Front Side": {
+              "HTML": [0, 0, 10, 30, 50, 50, 60, 80, 90, 60, 50, 30, 30, 30, 40],
+              "CSS": {
+                "CSS": [0, 0, 10, 30, 50, 50, 60, 80, 85, 60, 50, 30, 20, 20, 30],
+                "LESS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30],
+                "Responsive": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20]
+              },
+              "JSFramework": {
+                "jQuery": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20, 30, 30, 25, 30],
+                "ExtJs": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30],
+                "BackboneJs": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10],
+                "D3.js": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20],
+                "Rapheal": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20],
+                "kinetic": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20]
+              },
+              "Template": {
+                "Jade": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20],
+                "Razor": [0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 50, 60, 80, 80, 80]
+              }
+            }
+          },
+          "Language": {
+            "Dotnet": {
+              "C#": [0, 0, 0, 0, 0, 0, 20, 50, 70, 80, 90, 95, 95, 95, 95],
+              "Xaml": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 50],
+              "F#": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 30, 30]
+            },
+            "Script": {
+              "Javascript": [0, 0, 10, 30, 50, 50, 60, 60, 60, 80, 80, 60, 50, 50, 60],
+              "VBScript": [0, 0, 0, 0, 20, 20, 30, 30, 40, 30, 20, 20, 20, 20, 20],
+              "CoffeeScript": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 50],
+              "Python": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 20]
+            },
+            "Java": {
+              "Android": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30]
+            },
+            "Embedded": {
+              "X86 Asm": [0, 0, 0, 0, 0, 0, 0, 0, 10, 40, 40, 30, 25, 20, 20],
+              "C": [0, 0, 0, 0, 0, 0, 0, 20, 25, 30, 50, 50, 45, 40, 40]
+            },
+            "Other": {
+              "T-SQL": [0, 0, 0, 0, 0, 10, 20, 40, 40, 40, 60, 90, 90, 90, 80],
+              "(E)BNF": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30],
+              "XSD/XSLT": [0, 0, 0, 0, 0, 0, 20, 40, 40, 40, 40, 40, 50, 50, 60],
+              "QB": [40, 50, 40, 30, 20, 10, 5, 5, 5, 5, 5, 5, 5, 5, 5],
+              "VB": [0, 10, 20, 50, 60, 80, 90, 80, 70, 60, 60, 60, 60, 50, 50],
+              "Pascal": [0, 0, 0, 30, 50, 60, 40, 20, 10, 5, 5, 5, 5, 5, 5],
+              "IEC61131": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 40]
+            }
+          },
+          "Other": {
+            "HW&FW": {
+              "Protues": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 25, 20, 20, 25],
+              "Keil": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 25, 20, 20, 25],
+              "Code Warrior": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 15, 15, 10, 10, 20],
+              "Protel": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 15, 10, 10, 5],
+              "Multisim": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 30, 25, 20, 15],
+              "Lego": [0, 0, 0, 0, 10, 40, 50, 45, 40, 35, 30, 25, 20, 15, 10]
+            },
+            "Productivity": {
+              "Vim": [0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 30, 40, 45, 50, 55],
+              "AHK": [0, 0, 0, 0, 0, 0, 0, 0, 10, 20, 30, 30, 30, 35, 40],
+              "Office": [0, 10, 20, 50, 60, 60, 70, 70, 80, 90, 90, 90, 90, 90, 90],
+              "Photoshop": [0, 10, 20, 30, 35, 40, 45, 50, 60, 65, 60, 60, 55, 60, 60],
+              "Batch": [40, 45, 50, 50, 50, 60, 65, 70, 75, 75, 80, 80, 80, 80, 80],
+              "Shell": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 30, 35, 40],
+              "Linux": [0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10, 40, 50, 55],
+              "Marked Text": [10, 20, 20, 30, 40, 40, 40, 40, 40, 50, 60, 70, 80, 80, 80]
+            },
+            "Project": {
+              "Agile": [0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 40, 50, 60, 70, 80],
+              "CI": [0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 50, 70, 70, 80, 80],
+              "Repos": {
+                "Git": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 30, 50],
+                "SVN": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 50, 50, 50],
+                "Clearcase": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30]
+              },
+              "Track": {
+                "Redmine": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30],
+                "Trello": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 20]
+              },
+              "Wiki": [0, 0, 0, 0, 0, 0, 0, 0, 10, 40, 50, 40, 40, 40, 40],
+              "Quality Assurance": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 30, 50, 60, 60]
+            },
+            "Cloud": {
+              "IaaS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 15],
+              "PaaS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 15, 30, 30],
+              "SaaS": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 10, 10]
+            },
+            "Test": {
+              "TDD": [0, 0, 0, 0, 0, 0, 0, 0, 5, 10, 5, 5, 15, 5, 5],
+              "cucumber": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 10, 30],
+              "Load test": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 40, 30, 25, 20, 15]
+            }
+          }
+        }
+      };
+
+
+
+      function initchart() {
+          var data = {
+              _proficiency: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+              children: null,
+              value: 0,
+              key: "",
+              depth: 1
+          };
+          chart.refreshChart(data)
+      }
+      function mouseover(data) {
+          chart.refreshChart(data);
+          var c = getcrumbpath(data);
+          i(c);
+          d3
+              .selectAll(".skills-sunburst path")
+              .style("opacity", .3), sunburst
+              .selectAll("path")
+              .filter(function (a) { return c.indexOf(a) >= 0 })
+              .style("opacity", 1)
+      }
+      function mouseleave() {
+          d3
+              .selectAll("path")
+              .on("mouseover", null);
+          d3
+              .selectAll("path")
+              .transition()
+              .duration(1e3)
+              .style("opacity", 1)
+              .each("end", function () { d3.select(this).on("mouseover", mouseover) })
+      }
+      function getcrumbpath(a) {
+          for (var temp = [], c = a; c.parent;) temp.unshift(c), c = c.parent;
+          return temp
+      }
+      function initbreadcrumb() {
+          d3
+              .select("#skills-chart-breadcrumb")
+              .append("svg:svg")
+              .attr("width", 500)
+              .attr("height", 50)
+              .attr("class", "trail")
+      }
+      function h(a, d3) {
+          var c = [];
+          c.push("0,0");
+          c.push(r.w + ",0");
+          c.push(r.w + r.t + "," + r.h / 2);
+          c.push(r.w + "," + r.h);
+          c.push("0," + r.h);
+          d3 > 0 && c.push(r.t + "," + r.h / 2);
+          return c.join(" ");
+      }
+      function i(a) {
+          a[a.length - 1]._color, a.length;
+          var c = d3
+              .select("#skills-chart-breadcrumb .trail")
+              .selectAll("g")
+              .remove();
+          c = d3
+              .select("#skills-chart-breadcrumb .trail")
+              .selectAll("g")
+              .data(a, function (a) { return a.key + a.depth });
+          var d = c.enter().append("svg:g");
+          d
+              .append("svg:polygon")
+              .attr("points", h)
+              .style("fill", function (a) { return a._color }), 
+          d
+              .append("svg:text")
+              .attr("x", r.w / 2 + 2)
+              .attr("y", r.h / 2)
+              .attr("dy", "0.35em")
+              .attr("text-anchor", "middle")
+              .attr("class", "breadcumb-text")
+              .style("fill", function (a) { return getcolor(d3.rgb(a._color)) < 150 ? "#fff" : "#000" })
+              .text(function (a) { return a.key }),
+          c
+              .attr("transform", function (a, b) { return "translate(" + b * (r.w + r.s) + ", 0)" }), 
+          c.exit().remove(), 
+          d3.select(".trail").style("visibility", "")
+      }
+      function getcolor(color) {
+          return .299 * color.r + .587 * color.g + .114 * color.b
+      }
+      function k(a) {
+          var c = ["#4CC3D9", "#FFC65D", "#7BC8A4", "#93648D", "#404040"],
+              d = [-.1, -.05, 0];
+          if (1 == a.depth) {
+              var e = c[coloralternative % 5];
+              return coloralternative++, e
+          }
+          if (a.depth > 1) {
+              var f = d[a.value % 3];
+              return d3.rgb(a.parent._color).brighter(.2 * a.depth + f * a.depth)
+          }
+      }
+      var l;
+      var chart = function (d3) {
+          function processdata(data) {
+              var b = [],
+                  c = 0;
+              return data._proficiency.forEach(function (a) {
+                  c <= i.length && (b.push({
+                      p: a,
+                      date: i[c]
+                  }), c++)
+              }), b
+          }
+          function c(b, c) {
+              j.domain(d3.extent(b, function (a) { return a.date }));
+              k
+                  .domain([0, 100]), cpath
+                  .append("g")
+                  .attr("class", "x-axis axis")
+                  .attr("transform", "translate(0," + h + ")")
+                  .call(bottomtick)
+                  .append("text")
+                  .attr("x", 450)
+                  .attr("y", -8)
+                  .style("text-anchor", "end")
+                  .text("Time"), cpath
+                  .append("g")
+                  .attr("class", "y-axis axis")
+                  .call(lefttick)
+                  .append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", 6)
+                  .attr("dy", ".91em")
+                  .style("text-anchor", "end")
+                  .text("Proficiency"), cpath
+                  .append("path")
+                  .datum(b)
+                  .attr("class", "line")
+                  .attr("id", "skills-chart-line")
+                  .attr("d", n)
+                  .attr("stroke", function () { return c._color })
+          }
+          function refreshChart(data) {
+              var e = processdata(data),
+                  f = d3.select("#skills-chart-line");
+              null === f[0][0] 
+              ? c(e, data) 
+              : f
+                  .datum(e)
+                  .attr("d", n)
+                  .attr("stroke", function () { return data._color })
+          }
+          var chart = {},
+              rect = {
+                  top: 20,
+                  right: 20,
+                  bottom: 30,
+                  left: 20
+              },
+              g = 500 - rect.left - rect.right,
+              h = 400 - rect.top - rect.bottom,
+              i = [1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013],
+              j = d3.scale.linear().range([0, g]),
+              k = d3.scale.linear().range([h, 0]),
+              bottomtick = d3
+                  .svg
+                  .axis()
+                  .scale(j)
+                  .tickValues([1999, 2004, 2009, 2013])
+                  .tickFormat(d3.format(".0f"))
+                  .tickPadding(10)
+                  .tickSize(0)
+                  .orient("bottom"),
+              lefttick = d3
+                  .svg
+                  .axis()
+                  .scale(k)
+                  .tickSize(0)
+                  .tickPadding(10)
+                  .tickValues([20, 40, 60, 80, 100])
+                  .orient("left"),
+              n = d3.svg.line().interpolate("basis").x(function (a) {
+                  return j(a.date)
+              }).y(function (a) {
+                  return k(a.p)
+              }),
+              cpath = d3
+                  .select(".skills-chart")
+                  .append("svg")
+                  .attr("width", g + rect.left + rect.right)
+                  .attr("height", h + rect.top + rect.bottom)
+                  .append("g")
+                  .attr("transform", "translate(" + rect.left + "," + rect.top + ")");
+              chart.refreshChart = refreshChart;
+              return chart;
+          }(d3),
+          width = 580,
+          height = 580,
+          rad = Math.min(width, height) / Math.PI - 25,
+          q = k,
+          r = {
+              w: 116,
+              h: 30,
+              s: 3,
+              t: 7
+          },
+          sunburst = d3
+              .select(".skills-sunburst")
+              .append("svg:svg")
+              .attr("width", width)
+              .attr("height", height)
+              .append("svg:g")
+              .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+      sunburst.append("svg:circle").attr("r", rad).style("opacity", 0);
+      var t = function (a, b) {
+              var c = [],
+                  d = a.length;
+              if (a.length !== b.length) c = a.length > b.length ? a : b;
+              else for (var e = 0; d > e; e++) {
+                  var f = Math.max(a[e], b[e]) - Math.abs(a[e] - b[e]) / 8;
+                  c.push(f)
+              }
+              return c
+          },
+          u = function (a) {
+              if (a instanceof Array) return a;
+              var b = [];
+              return $.each(a, function (a, c) {
+                  b = t(u(c), b)
+              }), b
+          },
+          proficiencydata = d3
+              .layout
+              .partition()
+              .sort(null)
+              .size([2 * Math.PI, rad])
+              .children(function (a) {
+                  return a.value instanceof Array 
+                      ? (a._proficiency = a.value, d3.entries([a.value[a.value.length - 1]]))
+                      : (a._proficiency = u(a.value), isNaN(a.value) ? d3.entries(a.value) : null)
+              })
+              .value(function (a) { return a.value }),
+          arc = d3.svg
+              .arc()
+              .startAngle(function (a) { return a.x })
+              .endAngle(function (a) { return a.x + a.dx - .01 / (a.depth + .5) })
+              .innerRadius(function (a) { return rad / Math.PI * a.depth })
+              .outerRadius(function (a) { return rad / Math.PI * (a.depth + 1) - 1 });
+
+      var coloralternative = 0
+      initbreadcrumb();
+      var path = sunburst
+          .data(d3.entries(skillsdata))
+          .selectAll("g")
+          .data(proficiencydata)
+          .enter()
+          .append("svg:g")
+          .attr("display", function (a) { return a.depth ? null : "none" });
+      path
+          .append("svg:path")
+          .attr("d", arc)
+          .attr("stroke", "#fff")
+          .attr("fill", function (a) { return a._color = q(a), a._color })
+          .attr("fill-rule", "evenodd").attr("display", function (a) { return a.children ? null : "none" })
+          .on("mouseover", mouseover); 
+      path.
+          append("svg:text")
+          .attr("transform", function (a) {
+              var r = 180 * ((a.x + a.dx / 2 - Math.PI / 2) / Math.PI);
+              return "rotate(" + r + ")"
+          })
+          .attr("x", function (a) { return rad / Math.PI * a.depth})
+          .attr("dx", "6").attr("dy", ".1em").text(function (a) { return a.key })
+          .attr("display", function (a) { return a.children ? null : "none" })
+          .on("mouseover", mouseover); 
+      d3
+          .select(".skills-sunburst")
+          .on("mouseleave", mouseleave);
+      l = path.node().__data__.value;
+      sunburst
+          .append("circle")
+          .attr("r", rad / Math.PI)
+          .attr("stroke", "#fff")
+          .attr("fill", "#84d6b0");
+      sunburst
+          .append("svg:text")
+          .text("金域检验")
+          .attr("x", -15)
+          .attr("y", 3);
+          //.attr("opacity", 0.2);
+      initchart();
+
+
+
+
+
+    }
+    function showright(){
+      var width = 500,
+          height = 500,
+          outerRadius = Math.min(width, height) / 2 - 10,
+          innerRadius = outerRadius - 24;
+
+      var formatPercent = d3.format(".1%");
+
+      var arc = d3.svg.arc()
+          .innerRadius(innerRadius)
+          .outerRadius(outerRadius);
+
+      var layout = d3.layout.chord()
+          .padding(.04)
+          .sortSubgroups(d3.descending)
+          .sortChords(d3.ascending);
+
+      var path = d3.svg.chord()
+          .radius(innerRadius);
+
+      var svg = d3.select(".d3right").append("svg")
+          .attr("width", width)
+          .attr("height", height)
+        .append("g")
+          .attr("id", "circle")
+          .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+      svg.append("circle")
+          .attr("r", outerRadius);
+
+      d3.csv("jsonFile/cities.csv", function(cities) {
+        d3.json("jsonFile/matrix.json", function(matrix) {
+
+          // Compute the chord layout.
+          layout.matrix(matrix);
+
+          // Add a group per neighborhood.
+          var group = svg.selectAll(".group")
+              .data(layout.groups)
+            .enter().append("g")
+              .attr("class", "group")
+              .on("mouseover", mouseover);
+
+          // Add a mouseover title.
+          group.append("title").text(function(d, i) {
+            return cities[i].name + ": " + formatPercent(d.value) + " of origins";
+          });
+
+          // Add the group arc.
+          var groupPath = group.append("path")
+              .attr("id", function(d, i) { return "group" + i; })
+              .attr("d", arc)
+              .style("fill", function(d, i) { return cities[i].color; });
+
+          // Add a text label.
+          var groupText = group.append("text")
+              .attr("x", 6)
+              .attr("dy", 15);
+
+          groupText.append("textPath")
+              .attr("xlink:href", function(d, i) { return "#group" + i; })
+              .text(function(d, i) { return cities[i].name; });
+
+          // Remove the labels that don't fit. :(
+          groupText.filter(function(d, i) { return groupPath[0][i].getTotalLength() / 2 - 16 < this.getComputedTextLength(); })
+              .remove();
+
+          // Add the chords.
+          var chord = svg.selectAll(".chord")
+              .data(layout.chords)
+            .enter().append("path")
+              .attr("class", "chord")
+              .style("fill", function(d) { return cities[d.source.index].color; })
+              .attr("d", path);
+
+          // Add an elaborate mouseover title for each chord.
+          chord.append("title").text(function(d) {
+            return cities[d.source.index].name
+                + " → " + cities[d.target.index].name
+                + ": " + formatPercent(d.source.value)
+                + "\n" + cities[d.target.index].name
+                + " → " + cities[d.source.index].name
+                + ": " + formatPercent(d.target.value);
+          });
+
+          function mouseover(d, i) {
+            chord.classed("fade", function(p) {
+              return p.source.index != i
+                  && p.target.index != i;
+            });
+          }
+        });
+      });
+    }
+    function showleft(){
+      var diameter = 512,
+        format = d3.format(",d"),
+        color = d3.scale.category20c();
+
+      var bubble = d3.layout.pack()
+          .sort(null)
+          .size([diameter, diameter])
+          .padding(1.5);
+
+      var svg = d3.select(".d3left").append("svg")
+          .attr("width", diameter)
+          .attr("height", diameter)
+          .attr("class", "bubble");
+
+      d3.json("jsonFile/flare.json", function(error, root) {
+        var node = svg.selectAll(".node")
+            .data(bubble.nodes(classes(root))
+            .filter(function(d) { return !d.children; }))
+          .enter().append("g")
+            .attr("class", "node")
+            .attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+
+        node.append("title")
+            .text(function(d) { return d.className + ": " + format(d.value); });
+
+        node.append("circle")
+            .attr("r", function(d) { return d.r; })
+            .style("fill", function(d) { return color(d.packageName); });
+
+        node.append("text")
+            .attr("dy", ".3em")
+            .style("text-anchor", "middle")
+            .text(function(d) { return d.className.substring(0, d.r / 3); });
+      });
+
+      // Returns a flattened hierarchy containing all leaf nodes under the root.
+      function classes(root) {
+        var classes = [];
+
+        function recurse(name, node) {
+          if (node.children) node.children.forEach(function(child) { recurse(node.name, child); });
+          else classes.push({packageName: name, className: node.name, value: node.size});
+        }
+
+        recurse(null, root);
+        return {children: classes};
+      }
+
+      d3.select(self.frameElement).style("height", diameter + "px");
+
+    }
+});
+
+
+
+</script>

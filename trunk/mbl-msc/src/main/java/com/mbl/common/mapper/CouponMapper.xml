@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.CouponMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.vo.CouponVO" >
+    <id column="coupon_id" property="couponId" jdbcType="VARCHAR" />
+    <result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+    <result column="coupon_name" property="couponName" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="coupon_worth" property="couponWorth" jdbcType="DECIMAL" />
+    <result column="coupon_start_date" property="couponStartDate" jdbcType="TIMESTAMP" />
+    <result column="coupon_end_date" property="couponEndDate" jdbcType="TIMESTAMP" />
+    <result column="coupon_status" property="couponStatus" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="effective_day" property="effectiveDay" jdbcType="INTEGER" />
+    <result column="coupon_status_name" property="couponStatusName" jdbcType="VARCHAR" />
+    <result column="coupon_type_name" property="couponTypeName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    coupon_id, coupon_type, coupon_name, description, coupon_worth, coupon_start_date, 
+    coupon_end_date, coupon_status, creation_date, creation_by, last_update_date, last_update_by, 
+    effective_day
+  </sql>
+  
+  <select id="countCouponByParams" resultType="Long">
+  	select count(1)
+		 from m_coupon c ,
+		       (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'coupon_type'
+		           and dh.dict_status = '1') dcoupontype,
+		       (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'status'
+		           and dh.dict_status = '1') dstatus
+		where c.coupon_type = dcoupontype.dict_code
+		and c.coupon_status = dstatus.dict_code
+		<if test="couponType!=null and couponType!=''">AND c.coupon_type=#{couponType,jdbcType=VARCHAR}</if>
+		<if test="couponStatus!=null and couponStatus!=''">AND c.coupon_status=#{couponStatus,jdbcType=VARCHAR}</if>
+		<if test="couponName!=null and couponName!=''">AND c.coupon_name like '%${couponName}%'</if>
+  </select>
+  
+  <select id="findCouponListByParams" resultMap="BaseResultMap">
+  	select c.*,
+  			dcoupontype.dict_value coupon_type_name,
+  			dstatus.dict_value coupon_status_name
+		 from m_coupon c ,
+		       (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'coupon_type'
+		           and dh.dict_status = '1') dcoupontype,
+		       (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'status'
+		           and dh.dict_status = '1') dstatus
+		where c.coupon_type = dcoupontype.dict_code
+		and c.coupon_status = dstatus.dict_code
+		<if test="couponType!=null and couponType!=''">AND c.coupon_type=#{couponType,jdbcType=VARCHAR}</if>
+		<if test="couponStatus!=null and couponStatus!=''">AND c.coupon_status=#{couponStatus,jdbcType=VARCHAR}</if>
+		<if test="couponName!=null and couponName!=''">AND c.coupon_name like '%${couponName}%'</if>
+  </select>
+  
+  <select id="getCouponById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_coupon
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_coupon
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+  </delete>
+  
+  <delete id="disabledCouponStatusById" parameterType="java.lang.String" >
+    update m_coupon set coupon_status='0',coupon_end_date=SYSDATE()
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="save" parameterType="com.mbl.common.bean.Coupon" >
+    insert into m_coupon
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="couponId != null" >
+        coupon_id,
+      </if>
+      <if test="couponType != null" >
+        coupon_type,
+      </if>
+      <if test="couponName != null" >
+        coupon_name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="couponWorth != null" >
+        coupon_worth,
+      </if>
+      <if test="couponStartDate != null" >
+        coupon_start_date,
+      </if>
+      <if test="couponEndDate != null" >
+        coupon_end_date,
+      </if>
+      <if test="couponStatus != null" >
+        coupon_status,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="effectiveDay != null" >
+        effective_day,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="couponId != null" >
+        #{couponId,jdbcType=VARCHAR},
+      </if>
+      <if test="couponType != null" >
+        #{couponType,jdbcType=VARCHAR},
+      </if>
+      <if test="couponName != null" >
+        #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="couponWorth != null" >
+        #{couponWorth,jdbcType=DECIMAL},
+      </if>
+      <if test="couponStartDate != null" >
+        #{couponStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponEndDate != null" >
+        #{couponEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponStatus != null" >
+        #{couponStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveDay != null" >
+        #{effectiveDay,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.Coupon" >
+    update m_coupon
+    <set >
+      <if test="couponType != null" >
+        coupon_type = #{couponType,jdbcType=VARCHAR},
+      </if>
+      <if test="couponName != null" >
+        coupon_name = #{couponName,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="couponWorth != null" >
+        coupon_worth = #{couponWorth,jdbcType=DECIMAL},
+      </if>
+      <if test="couponStartDate != null" >
+        coupon_start_date = #{couponStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponEndDate != null" >
+        coupon_end_date = #{couponEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="couponStatus != null" >
+        coupon_status = #{couponStatus,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="effectiveDay != null" >
+        effective_day = #{effectiveDay,jdbcType=INTEGER},
+      </if>
+    </set>
+    where coupon_id = #{couponId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="searchUserCouponByParams" resultMap="BaseResultMap" parameterType="map" >
+    select 
+	    c.coupon_id, 
+	    c.coupon_type, 
+	    c.coupon_name, 
+	    c.description, 
+	    c.coupon_worth, 
+	    c.coupon_start_date, 
+	    c.coupon_end_date, 
+	    c.coupon_status, 
+	    c.creation_date, 
+	    c.creation_by, 
+	    c.last_update_date, 
+	    c.last_update_by, 
+	    c.effective_day
+    from m_user_coupon uc
+    left join m_coupon c on uc.coupon_id = c.coupon_id
+    where user_id = #{userId,jdbcType=VARCHAR}
+  </select>
+  
+  
+</mapper>

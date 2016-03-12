@@ -1,0 +1,59 @@
+<!-- modal begin -->
+  <!--  Modal content for the above example -->
+<div class="modal fade modal-scroll" id="orderDetailModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-replace="true">
+    <div class="modal-dialog modal-lg" style="width:80%;">
+      	<div class="modal-content">
+
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">
+	          <span aria-hidden="true">&times;</span>
+	          <span class="sr-only">Close</span>
+	          </button>
+	          <h4 class="modal-title" id="myLargeModalLabel">订单明细</h4>
+	        </div>
+	        <div class="modal-body" style="height:450px;overflow-y:auto;">
+ 				 
+ 				<div class="row">
+					<div class="table-responsive">
+						<table class="table table-striped table-bordered table-hover table-list   table-condensed  checked-0">
+                            <thead>
+                                <tr>
+                                   <th width="5%">序号</th>
+								   <th>套餐简称</th>
+								   <th>套餐类型</th>
+								   <th>套餐限制数</th>
+								   <th>套餐价格</th>
+								   <th>套餐折扣</th>
+								   <th>套餐开始时间</th>
+								   <th>套餐结束时间</th>
+								   <th>套餐描述</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in orderDetailList">
+	                                <td>{{$index+1}}</td>
+	                                <td>{{item.pkgName}}</td>
+	                                <td>{{dictMap_pkg_type[item.pkgType][0]['dictValue']}}</td>
+	                                <td>{{item.pkgNum | number:2}}</td>
+	                                <td>{{item.pkgPrice | number:2}}</td>
+	                                <td>{{item.pkgDiscount | number:2}}</td>
+	                                <td>{{item.pkgStartDate | date:'yyyy-MM-dd' }}</td>
+	                                <td>{{item.pkgEndDate | date:'yyyy-MM-dd' }}</td>
+	                                <td>{{item.description}}</td>
+                             	</tr>
+                            </tbody>
+                        </table>
+					</div>
+				</div>
+	        </div>
+	        <div class="modal-footer"> 
+				<div class="row">
+					<center class="submit col-sm-12" ><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-default btn-r-default  btn-radius" data-dismiss="modal"> <i class="ace-icon fa fa-times bigger-110"></i>关 闭</button>
+					</center>
+				</div> 
+			</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- modal end -->

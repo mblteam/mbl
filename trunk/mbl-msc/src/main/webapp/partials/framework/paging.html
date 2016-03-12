@@ -1,0 +1,32 @@
+<div id="pagination_control" class="pagination text-right" ng-if="pageBean.totalSize > pageBean.size">
+	<span style="float: left;padding-top: 8px;">
+		总计: 共 {{pageBean.totalSize}} 条数据
+	</span>
+	<span ng-show="prePage">
+		<a href="javascript:;" class="previous" ng-click="bindData(pageBean.currentPage-1)">
+			<i class="fa fa-chevron-left"></i>
+		</a>
+		<div>
+			<a href="javascript:;" ng-click="bindData(1)">1</a>
+		</div>
+		<span ng-show="preByPage">
+			<div>...</div>
+		</span>
+	</span>
+	<span>
+		<div ng-repeat="ind in pageIndexs">
+			<a href="javascript:;" ng-click="bindData(ind)" ng-class="{active:pageBean.currentPage == ind}">{{ind}}</a>
+		</div>
+	</span>
+	<span ng-show="nextPage">
+		<span ng-show="nextByPage">
+			<div>...</div>
+		</span>
+		<div>
+			<a href="javascript:;" ng-click="bindData(pageBean.totalPage)">{{pageBean.totalPage}}</a>
+		</div>
+		<a href="javascript:;" class="next" ng-click="bindData(pageBean.currentPage+1)">
+			<i class="fa fa-chevron-right"></i>
+		</a>
+	</span>
+</div>

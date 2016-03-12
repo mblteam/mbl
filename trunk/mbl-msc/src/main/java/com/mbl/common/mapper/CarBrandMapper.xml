@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.CarBrandMapper">
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.CarBrand" />
+
+	<resultMap id="baseResultMap" type="com.mbl.common.bean.CarBrand">
+		<id column="cb_id" property="cbId" jdbcType="VARCHAR" />
+	    <result column="brand_code" property="brandCode" jdbcType="VARCHAR" />
+	    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+	    <result column="url" property="url" jdbcType="VARCHAR" />
+	    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+	    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<!-- 映射字段 -->
+	<sql id="base_column_list" >
+		cb_id cbId,brand_code brandCode,brand_name brandName,url,creation_Date creationDate,creation_By creationBy,
+		last_Update_Date lastUpdateDate,last_Update_By lastUpdateBy
+	</sql>
+	
+	<insert id="save" parameterMap="baseParameterMap">
+		insert into m_car_brand (cb_id,brand_code,brand_name,url,creation_date,creation_by,last_update_date,last_update_by)
+		VALUES(#{cbId,jdbcType=VARCHAR},#{brandCode,jdbcType=VARCHAR},
+			   #{brandName,jdbcType=VARCHAR},#{url,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+			   #{lastUpdateBy,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterMap="baseParameterMap">
+		update m_car_brand
+		<set >
+			<if test="brandCode != null" >
+	      		brand_code=#{brandCode,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="brandName != null" >
+	      		brand_name=#{brandName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="url != null" >
+	      		url=#{url,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="creationDate != null" >
+	      		creation_date=#{creationDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="creationBy != null" >
+	      		creation_by=#{creationBy,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="lastUpdateDate != null" >
+	      		last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="lastUpdateBy != null" >
+	      		last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+	      	</if>
+     </set> 
+	WHERE cb_id=#{cbId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据id删除某个品牌 -->
+	<delete id="delById">
+		delete from m_car_brand where cb_id=#{cbId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 根据id查询某个品牌 -->
+	<select id="getById" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_car_brand where cb_id=#{cbId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据条件查询品牌  -->
+	<select id="findListByParams" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_car_brand where 1=1
+		 <if test="status!=null and status!=''">AND status=#{status,jdbcType=VARCHAR}</if>
+		 <if test="cbId!=null and cbId!=''">AND cb_id=#{cbId,jdbcType=VARCHAR}</if>
+		 <if test="brandCode!=null and brandCode!=''">AND brand_code like '%${brandCode}%'</if>
+		 <if test="brandName!=null and brandName!=''">AND brand_name like '%${brandName}%'</if>
+		 order by last_update_date desc
+	</select>
+	
+	<!-- 根据条件查询品牌数量 -->
+	<select id="getCountByParams" resultType="Long">
+		SELECT count(1)
+		FROM m_car_brand where 1=1
+		 <if test="cbId!=null and cbId!=''">AND cb_id=#{cbId,jdbcType=VARCHAR}</if>
+		 <if test="brandCode!=null and brandCode!=''">AND brand_code like '%${brandCode}%'</if>
+		 <if test="brandName!=null and brandName!=''">AND brand_name like '%${brandName}%'</if>
+	</select>
+</mapper>

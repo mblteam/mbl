@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.ShopPackageMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.vo.ShopPackageVO" >
+    <id column="sp_id" property="spId" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="pkg_id" property="pkgId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="pkg_price" property="pkgPrice" jdbcType="DECIMAL" />
+    <result column="pkg_start_date" property="pkgStartDate" jdbcType="TIMESTAMP" />
+    <result column="pkg_end_date" property="pkgEndDate" jdbcType="TIMESTAMP" />
+    <result column="pkg_start_date_str" property="pkgStartDateStr" jdbcType="VARCHAR" />
+    <result column="pkg_end_date_str" property="pkgEndDateStr" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="pkg_name" property="pkgName" jdbcType="VARCHAR" />
+    <result column="pkg_type" property="pkgType" jdbcType="VARCHAR" />
+    <result column="pkg_type_name" property="pkgTypeName" jdbcType="VARCHAR" />
+    <result column="pkg_num" property="pkgNum" jdbcType="VARCHAR" />
+    <result column="pkg_content" property="pkgContent" jdbcType="VARCHAR" />
+    <result column="apply_model" property="applyModel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    sp_id, shop_id, pkg_id, creation_date, creation_by, last_update_date, last_update_by, 
+    description, pkg_price, pkg_start_date, pkg_end_date,pkg_name,
+  	pkg_type,pkg_num,pkg_content,apply_model
+  </sql>
+
+  <select id="getShopPackageById" resultMap="BaseResultMap">
+   select <include refid="Base_Column_List" />
+   from m_shop_package
+   where sp_id = #{spId,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="save" parameterType="com.mbl.common.bean.ShopPackage" >
+    insert into m_shop_package
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="spId != null" >
+        sp_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="pkgId != null" >
+        pkg_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="pkgPrice != null" >
+        pkg_price,
+      </if>
+      <if test="pkgStartDate != null" >
+        pkg_start_date,
+      </if>
+      <if test="pkgEndDate != null" >
+        pkg_end_date,
+      </if>
+      <if test="pkgName != null" >
+        pkg_name,
+      </if>
+      <if test="pkgType != null" >
+        pkg_type,
+      </if>
+      <if test="pkgNum != null" >
+        pkg_num,
+      </if>
+      <if test="pkgContent != null" >
+        pkg_content,
+      </if>
+      <if test="applyModel != null" >
+        apply_model,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="spId != null" >
+        #{spId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null" >
+        #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgPrice != null" >
+        #{pkgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="pkgStartDate != null" >
+        #{pkgStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgEndDate != null" >
+        #{pkgEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgName != null" >
+        #{pkgName,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null" >
+        #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null" >
+        #{pkgNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgContent != null" >
+        #{pkgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="applyModel != null" >
+        #{applyModel,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.ShopPackage" >
+    update m_shop_package
+    <set >
+      <if test="shopId != null" >
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null" >
+        pkg_id = #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgPrice != null" >
+        pkg_price = #{pkgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="pkgStartDate != null" >
+        pkg_start_date = #{pkgStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgEndDate != null" >
+        pkg_end_date = #{pkgEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgName != null" >
+        pkg_name = #{pkgName,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null" >
+        pkg_type = #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null" >
+        pkg_num = #{pkgNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgContent != null" >
+        pkg_content = #{pkgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="applyModel != null" >
+        apply_model = #{applyModel,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sp_id = #{spId,jdbcType=VARCHAR}
+  </update>
+  
+  <select id="countShopPackageListByParams" resultType="Long" parameterType="map">
+    SELECT count(1)
+	FROM m_shop_package msp
+	LEFT JOIN m_shop ms on msp.shop_id = ms.shop_id
+	left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'pkg_type'
+		           and dh.dict_status = '1') dpkgtype on msp.pkg_type = dpkgtype.dict_code
+    where msp.delete_flag = '0'
+    <if test="shopId!=null and shopId!=''">and msp.shop_id = #{shopId,jdbcType=VARCHAR}</if>
+     <if test="pkgId!=null and pkgId!=''">and msp.pkg_id = #{pkgId,jdbcType=VARCHAR}</if>
+     <if test="currentTimestamp!=null">AND CURRENT_TIMESTAMP() BETWEEN msp.pkg_start_date AND msp.pkg_end_date</if>
+      <if test="spIds != null and spIds != ''">
+      	and msp.sp_id in 
+      	<foreach collection="spIds" item="item" open="(" close=")" separator=",">
+      		#{item,jdbcType=VARCHAR}
+      	</foreach>
+      </if>
+  </select>
+  
+  <select id="findShopPackageListByParams" resultMap="BaseResultMap" parameterType="map">
+    SELECT
+		msp.sp_id,
+		msp.shop_id,
+		ms.shop_name,
+		msp.pkg_id,
+		msp.creation_date,
+		msp.creation_by,
+		msp.last_update_date,
+		msp.last_update_by,
+		msp.description,
+		msp.pkg_price,
+		msp.pkg_start_date,
+		msp.pkg_end_date,
+		DATE_FORMAT(msp.pkg_start_date,'%Y-%m-%d') pkg_start_date_str,
+		DATE_FORMAT(msp.pkg_end_date,'%Y-%m-%d') pkg_end_date_str,
+		msp.pkg_name,
+		msp.pkg_type,
+		dpkgtype.dict_value pkg_type_name,
+		msp.pkg_num, 
+		msp.pkg_content,
+		msp.apply_model
+	FROM m_shop_package msp 
+	LEFT JOIN m_shop ms on msp.shop_id = ms.shop_id
+	left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'pkg_type'
+		           and dh.dict_status = '1') dpkgtype on msp.pkg_type = dpkgtype.dict_code
+    where msp.delete_flag = '0' 
+    <if test="shopId!=null and shopId!=''">and msp.shop_id = #{shopId,jdbcType=VARCHAR}</if>
+     <if test="pkgId!=null and pkgId!=''">and msp.pkg_id = #{pkgId,jdbcType=VARCHAR}</if>
+     <if test="currentTimestamp!=null">AND CURRENT_TIMESTAMP() BETWEEN msp.pkg_start_date AND msp.pkg_end_date</if>
+     <if test="spIds != null and spIds != ''">
+      	and msp.sp_id in 
+      	<foreach collection="spIds" item="item" open="(" close=")" separator=",">
+      		#{item,jdbcType=VARCHAR}
+      	</foreach>
+      </if>
+      ORDER BY msp.creation_date
+  </select>
+  
+  <delete id="delByParams">
+    update m_shop_package set delete_flag='1'
+    where shop_id = #{shopId,jdbcType=VARCHAR}
+	    and sp_id not in 
+	    <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+	    	#{item}
+		</foreach>
+  </delete>
+  
+  <delete id="delById">
+    update m_shop_package set delete_flag='1'
+    where sp_id  = #{spId,jdbcType=VARCHAR}
+  </delete>
+  
+    <delete id="delByIds">
+    update m_shop_package set delete_flag='1'
+    where sp_id in 
+	    <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+	    	#{item}
+		</foreach>
+  </delete>
+</mapper>

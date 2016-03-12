@@ -1,0 +1,96 @@
+<div class="page-content-area">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+					<div class="row"> 
+						<div class="form-group col-xs-12">
+							<label class="col-sm-1 control-label no-padding-right" for="">套餐简称:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.pkgName" /> 
+							</div>
+				 			<label class="col-sm-1 control-label no-padding-right" for="">套餐内容:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.pkgContent" /> 
+							</div>
+							<label class="col-sm-1 control-label no-padding-right" for="">套餐类型:</label>
+							<div class="col-sm-3">
+								<select class="input-large input-sm" type="text" ng-model="search.pkgType"
+									ng-options="dict.dictCode as dict.dictValue for dict in dict_pkg_type">
+									<option value="">--请选择--</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
+	            <div class="hr hr-8 solid dotted-bottom search-hr">
+	                <span class="search-tool" ng-click="onsearch()">
+	                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+	                </span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-10">
+	                    <a class="btn btn-primary btn-r-primary btn-sm btn-radius" ng-click="add()"><i class="ace-icon glyphicon glyphicon-plus bigger-110"></i>&nbsp;添 加</a>
+	                </div>
+	            </div>
+	            <div class="hr hr-8 hr-double dotted"></div>
+	            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list table-condensed  checked-0" style="table-layout:fixed;">
+                            <thead>
+                                <tr>
+                                   <th width="10%">序号</th>
+                                   <th width="15%">套餐简称</th>
+								   <th width="15%">套餐类型</th>
+								   <th width="15%">套餐限制数</th>
+								   <th width="15%">套餐内容</th>
+								   <th width="15%">备注</th>
+								   <th width="15%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in dataList.data">
+	                                <td>{{$index+1}}</td>
+	                                <td>
+	                                	{{dictMap_pkg_type[item.pkgType][0]['dictValue']}}
+	                                </td>
+	                                 <td>
+	                                	{{item.pkgName}}
+	                                </td>
+	                                <td>
+	                                	{{item.pkgNum}}
+	                                </td>
+	                                <td title="{{item.pkgContent}}" style="width:100px;border:1px lightblue solid;overflow:hidden;text-overflow:ellipsis;">
+	                                	{{item.pkgContent}}
+	                                </td>
+	                                <td title="{{item.remark}}"  style="width:100px;border:1px lightblue solid;overflow:hidden;text-overflow:ellipsis;">
+	                                	{{item.remark}}
+	                                </td>
+	                                <td>
+										<div class="hidden-sm hidden-xs action-buttons">
+	                                        <a class="blue" href="javascript:;" ng-click="edit(item.pkgId)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+											</a>
+											<a class="red" href="javascript:;" ng-click="remove(item.pkgId)">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+											</a>
+	                                     </div>
+									</td> 
+                             	</tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="dataList" plat-form="search"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	require(['basic/pkg/form'],function(form){
+		form.init();
+	});
+</script>
+
+<div ng-include="'partials/basic/pkg/modal/pkgEdit.html'"></div>

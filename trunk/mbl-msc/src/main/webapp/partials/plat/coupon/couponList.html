@@ -1,0 +1,112 @@
+<div class="page-content-area">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+					<div class="row"> 
+						<div class="form-group col-xs-12">
+							<label class="col-sm-1 control-label no-padding-right" for="">优惠券名称:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.couponName" /> 
+							</div>
+							
+				 			<label class="col-sm-1 control-label no-padding-right" for="">优惠券类型:</label>
+							<div class="col-sm-3">
+								<select class="input-large input-sm" type="text" ng-model="search.couponType"
+									ng-options="dict.dictCode as dict.dictValue for dict in dict_coupon_type">
+									<option value="">--请选择--</option>
+								</select>
+							</div>
+							
+							<label class="col-sm-1 control-label no-padding-right" for="">状态:</label>
+							<div class="col-sm-3">
+								<select class="input-large input-sm" type="text" ng-model="search.couponStatus"
+									ng-options="dict.dictCode as dict.dictValue for dict in dict_status">
+									<option value="">--请选择--</option>
+								</select>
+							</div>
+						</div>
+					</div>
+				</form>
+	            <div class="hr hr-8 solid dotted-bottom search-hr">
+	                <span class="search-tool" ng-click="onsearch()">
+	                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+	                </span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-10">
+	                    <a class="btn btn-primary btn-r-primary btn-sm btn-radius" ng-click="add()"><i class="ace-icon glyphicon glyphicon-plus bigger-110"></i>&nbsp;添 加</a>
+	                </div>
+	            </div>
+	            <div class="hr hr-8 hr-double dotted"></div>
+	            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list   table-condensed  checked-0" style="table-layout:fixed;">
+                            <thead>
+                                <tr>
+                                   <th width="5%">序号</th>
+								   <th width="15%">优惠券名称</th>
+								   <th width="10%">优惠券类型</th>
+								   <th width="10%">开始日期</th>
+								   <th width="10%">结束日期</th>
+								   <th width="10%">有效天数</th>
+								   <th width="10%">价值</th>
+								   <th width="30%">描述</th>
+								   <th width="10%">状态</th>
+								   <th width="20%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in dataList.data">
+	                                <td>{{$index+1}}</td>
+	                                <td>
+	                                	{{item.couponName}}
+	                                </td>
+	                                <td>
+	                                	{{item.couponTypeName}}
+	                                </td>
+	                                <td>
+	                                	{{item.couponStartDate | date:'yyyy-MM-dd'}}
+	                                </td>
+	                                <td>
+	                                	{{item.couponEndDate  | date:'yyyy-MM-dd'}}
+	                                </td>
+	                                <td>
+	                                	{{item.effectiveDay}}
+	                                </td>
+	                                <td>
+	                                	{{item.couponWorth}}
+	                                </td>
+	                                <td title="{{item.description}}" style="width:150px;border:1px lightblue solid;overflow:hidden;text-overflow:ellipsis;">
+	                                	{{item.description}}
+	                                </td>
+	                                <td>
+	                                	{{item.couponStatusName}}
+	                                </td>
+	                                <td>
+										<div class="hidden-sm hidden-xs action-buttons">
+	                                        <a class="blue" href="javascript:;" ng-click="edit(item.couponId)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+											</a>
+	                                        <a class="blue" href="javascript:;" ng-click="disabled(item.couponId)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>失效
+											</a>
+	                                     </div>
+									</td> 
+                             	</tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="dataList" plat-form="search"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	require(['plat/coupon/form'],function(form){
+		form.init();
+	});
+</script>
+<div ng-include="'partials/plat/coupon/modal/couponEdit.html'"></div>

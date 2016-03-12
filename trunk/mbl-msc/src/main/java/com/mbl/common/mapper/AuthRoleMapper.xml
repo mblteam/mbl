@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.AuthRoleMapper">
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.Role" />
+
+	<resultMap id="baseResultMap" type="com.mbl.common.bean.Role" />
+
+	<!-- 映射字段 -->
+	<sql id="base_column_list" >
+		role_id roleId,role_code roleCode,role_name roleName,
+		role_status roleStatus,creation_Date creationDate,creation_By creationBy,
+		last_Update_Date lastUpdateDate,last_Update_By lastUpdateBy
+	</sql>
+	
+	<insert id="save" parameterMap="baseParameterMap">
+		insert into m_role (role_id,role_code,role_name,role_status,creation_date,creation_by,last_update_date,last_update_by)
+		VALUES(#{roleId,jdbcType=VARCHAR},#{roleCode,jdbcType=VARCHAR},#{roleName,jdbcType=VARCHAR},
+			   #{roleStatus,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+			   #{lastUpdateBy,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterMap="baseParameterMap">
+		update m_role
+		<set >
+			<if test="roleCode != null" >
+	      		role_code=#{roleCode,jdbcType=VARCHAR},
+	      	</if>
+			<if test="roleName != null" >
+	      		role_name=#{roleName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="roleStatus != null" >
+	      		role_status=#{roleStatus,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="creationDate != null" >
+	      		creation_date=#{creationDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="creationBy != null" >
+	      		creation_by=#{creationBy,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="lastUpdateDate != null" >
+	      		last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="lastUpdateBy != null" >
+	      		last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+	      	</if>
+     </set> 
+	WHERE role_id=#{roleId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据id删除某个角色 -->
+	<delete id="delById">
+		delete from m_role where role_id=#{roleId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 根据id查询某个角色 -->
+	<select id="getById" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_role where role_id=#{roleId,jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 根据条件查询角色  -->
+	<select id="findListByParams" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_role where 1=1
+		 <if test="roleId!=null and roleId!=''">AND role_id=#{roleId,jdbcType=VARCHAR}</if>
+		 <if test="roleCode!=null and roleCode!=''">AND role_code=#{roleCode,jdbcType=VARCHAR}</if>
+		 <if test="roleName!=null and roleName!=''">AND role_name like '%${roleName}%'</if>
+		 <if test="roleStatus!=null and roleStatus!=''">AND role_status = #{roleStatus,jdbcType=VARCHAR}</if>
+		 order by last_update_date desc
+	</select>
+	
+	<!-- 根据条件查询角色数量 -->
+	<select id="getCountByParams" resultType="Long">
+		SELECT count(1)
+		FROM m_role where 1=1
+		 <if test="roleId!=null and roleId!=''">AND role_id=#{roleId,jdbcType=VARCHAR}</if>
+		 <if test="roleCode!=null and roleCode!=''">AND role_code like '%${roleCode}%'</if>
+		 <if test="roleName!=null and roleName!=''">AND role_name like '%${roleName}%'</if>
+		 <if test="roleStatus!=null and roleStatus!=''">AND role_status=#{roleStatus,jdbcType=VARCHAR}</if>
+	</select>
+</mapper>

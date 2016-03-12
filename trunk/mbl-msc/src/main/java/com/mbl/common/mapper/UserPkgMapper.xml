@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.UserPkgMapper">
+  <resultMap id="BaseResultMap" type="com.mbl.common.bean.UserPkg">
+    <id column="up_id" jdbcType="VARCHAR" property="upId" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="car_id" jdbcType="VARCHAR" property="carId" />
+    <result column="pkg_id" jdbcType="VARCHAR" property="pkgId" />
+    <result column="start_date" jdbcType="TIMESTAMP" property="startDate" />
+    <result column="end_date" jdbcType="TIMESTAMP" property="endDate" />
+    <result column="start_date_str" jdbcType="VARCHAR" property="startDateStr" />
+    <result column="end_date_str" jdbcType="VARCHAR" property="endDateStr" />
+    <result column="shop_Id" jdbcType="VARCHAR" property="shopId" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="creation_by" jdbcType="VARCHAR" property="creationBy" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
+    <result column="pkg_type" jdbcType="VARCHAR" property="pkgType" />
+    <result column="pkg_num" jdbcType="DECIMAL" property="pkgNum" />
+    <result column="use_num" jdbcType="DECIMAL" property="useNum" />
+    <result column="left_num" jdbcType="DECIMAL" property="leftNum" />
+    <result column="order_id" jdbcType="VARCHAR" property="orderId" />
+    <result column="order_detail_id" jdbcType="VARCHAR" property="orderDetailId" />
+    <result column="status" jdbcType="VARCHAR" property="status" />
+    
+    <result column="price" jdbcType="DECIMAL" property="price" />
+    <result column="discount" jdbcType="DECIMAL" property="discount" />
+    <result column="paid" jdbcType="DECIMAL" property="paid" />
+    <result column="account_id" jdbcType="DECIMAL" property="accountId" />
+    
+  </resultMap>
+  <sql id="Base_Column_List">
+    up_id, user_id, car_id, pkg_id, start_date, end_date, shop_Id, creation_date, creation_by, 
+    last_update_date, last_update_by, pkg_type, pkg_num, use_num, left_num, order_id, order_detail_id,
+    status,price,discount,paid,account_id
+  </sql>
+  <select id="getById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from m_user_pkg
+    where up_id = #{upId,jdbcType=VARCHAR}
+  </select>
+  <delete id="delById" parameterType="java.lang.String">
+    delete from m_user_pkg
+    where up_id = #{upId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.UserPkg">
+    insert into m_user_pkg
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="upId != null">
+        up_id,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="carId != null">
+       	car_id,
+      </if>
+      <if test="pkgId != null">
+        pkg_id,
+      </if>
+      <if test="startDate != null">
+        start_date,
+      </if>
+      <if test="endDate != null">
+        end_date,
+      </if>
+      <if test="shopId != null">
+        shop_Id,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="creationBy != null">
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by,
+      </if>
+      <if test="pkgType != null">
+        pkg_type,
+      </if>
+      <if test="pkgNum != null">
+        pkg_num,
+      </if>
+      <if test="useNum != null">
+        use_num,
+      </if>
+      <if test="leftNum != null">
+        left_num,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+      <if test="orderDetailId != null">
+        order_detail_id,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="discount != null">
+        discount,
+      </if>
+      <if test="paid != null">
+        paid,
+      </if>
+      <if test="accountId != null">
+        account_id
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="upId != null">
+        #{upId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="carId != null">
+        #{carId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null">
+        #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null">
+        #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null">
+        #{pkgNum,jdbcType=DECIMAL},
+      </if>
+      <if test="useNum != null">
+        #{useNum,jdbcType=DECIMAL},
+      </if>
+      <if test="leftNum != null">
+        #{leftNum,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailId != null">
+        #{orderDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null">
+        #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="paid != null">
+        #{paid,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null">
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  
+  <insert id="insertbatch" parameterType="java.util.List" >
+    insert into m_user_pkg
+        (up_id,user_id,car_id,pkg_id,start_date,end_date,shop_Id,creation_date,creation_by,
+        last_update_date,last_update_by,pkg_type,pkg_num,use_num,left_num,order_id,order_detail_id,
+        status,price,discount,paid,account_id) values
+    <foreach collection="list" item="item" index="index" separator=",">
+	        (#{item.upId,jdbcType=VARCHAR},
+	        #{item.userId,jdbcType=VARCHAR},
+	        #{item.carId,jdbcType=VARCHAR},
+	        #{item.pkgId,jdbcType=VARCHAR},
+	        #{item.startDate,jdbcType=TIMESTAMP},
+	        #{item.endDate,jdbcType=TIMESTAMP},
+	        #{item.shopId,jdbcType=VARCHAR},
+	        #{item.creationDate,jdbcType=TIMESTAMP},
+	        #{item.creationBy,jdbcType=VARCHAR},
+	        #{item.lastUpdateDate,jdbcType=TIMESTAMP},
+	        #{item.lastUpdateBy,jdbcType=VARCHAR},
+	        #{item.pkgType,jdbcType=VARCHAR},
+	        #{item.pkgNum,jdbcType=DECIMAL},
+	        #{item.useNum,jdbcType=DECIMAL},
+	        #{item.leftNum,jdbcType=DECIMAL},
+	        #{item.orderId,jdbcType=VARCHAR},
+	        #{item.orderDetailId,jdbcType=VARCHAR},
+	        #{item.status,jdbcType=VARCHAR},
+	        #{item.price,jdbcType=VARCHAR},
+	        #{item.discount,jdbcType=VARCHAR},
+	        #{item.paid,jdbcType=VARCHAR},
+	        #{item.accountId,jdbcType=VARCHAR})
+      </foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.UserPkg">
+    update m_user_pkg
+    <set>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="carId != null">
+        car_id = #{carId,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgId != null">
+        pkg_id = #{pkgId,jdbcType=VARCHAR},
+      </if>
+      <if test="startDate != null">
+        start_date = #{startDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="endDate != null">
+        end_date = #{endDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="shopId != null">
+        shop_Id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgType != null">
+        pkg_type = #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null">
+        pkg_num = #{pkgNum,jdbcType=DECIMAL},
+      </if>
+      <if test="useNum != null">
+        use_num = #{useNum,jdbcType=DECIMAL},
+      </if>
+      <if test="leftNum != null">
+        left_num = #{leftNum,jdbcType=DECIMAL},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=VARCHAR},
+      </if>
+      <if test="orderDetailId != null">
+        order_detail_id = #{orderDetailId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+       <if test="price != null">
+        price = #{price,jdbcType=VARCHAR},
+      </if>
+      <if test="discount != null">
+         discount = #{discount,jdbcType=VARCHAR},
+      </if>
+      <if test="paid != null">
+         paid = #{paid,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null">
+         account_id = #{accountId,jdbcType=VARCHAR}
+      </if>
+    </set>
+    where up_id = #{upId,jdbcType=VARCHAR}
+  </update>
+  
+   <select id="findUserPackageListByParams" parameterType="map" resultType="com.mbl.rest.pkg.vo.UserPackageVo">
+    SELECT
+		mup.up_id	upId,
+		mup.user_id	userId,
+		mup.car_id	carId,
+		mup.account_id	userId,
+		mup.pkg_id	pkgId,
+		mup.start_date	startDate,
+		mup.end_date	endDate,
+		DATE_FORMAT(mup.start_date, '%Y-%m-%d') startDateStr,
+		DATE_FORMAT(mup.end_date, '%Y-%m-%d') endDateStr,
+		mup.shop_Id	shopId,
+		ms.shop_name shopName,
+		mup.creation_date	creationDate,
+		mup.creation_by	creationBy,
+		mup.last_update_date	lastUpdateDate,
+		mup.last_update_by	lastUpdateBy,
+		mup.pkg_type	pkgType,
+		dpkgtype.dict_value pkgTypeName,
+		mup.pkg_num	pkgNum,
+		mup.use_num	useNum,
+		mup.left_num	leftNum,
+		mup.order_id	orderId,
+		mup.order_detail_id	orderDetailId,
+		mup.STATUS	STATUS,
+		msp.pkg_name	pkgName,
+		msp.pkg_content pkgContent,
+		mup.price,
+		mup.discount,
+		mup.paid
+	from m_user_pkg mup
+	left join m_shop_package msp on mup.pkg_id = msp.pkg_id
+	left join m_shop ms on ms.shop_id = mup.shop_id
+	left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'pkg_type'
+		           and dh.dict_status = '1') dpkgtype on msp.pkg_type = dpkgtype.dict_code
+    where 1=1 
+      <if test="status != null">
+         and mup.status = #{status,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+         and mup.user_id = #{userId,jdbcType=VARCHAR}
+      </if>
+       <if test="shopId != null">
+         and mup.shop_Id = #{shopId,jdbcType=VARCHAR}
+      </if>
+       <if test="pkgId != null">
+         and mup.pkg_id = #{pkgId,jdbcType=VARCHAR}
+      </if>
+      <if test="accountId != null">
+         and mup.account_id = #{accountId,jdbcType=VARCHAR}
+      </if>
+      <if test="pkgIds != null and pkgIds != ''">
+      	and mup.pkg_id in 
+      	<foreach collection="pkgIds" item="item" open="(" close=")" separator=",">
+      		#{item,jdbcType=VARCHAR}
+      	</foreach>
+      </if>
+      order by mup.last_update_date desc
+  </select>
+</mapper>

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.AccountRoleMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.bean.AccountRole" >
+    <id column="ur_id" property="urId" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="role_id" property="roleId" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    ur_id urId, account_id accountId, role_id roleId, status status,creation_date creationDate, creation_by creationBy, last_update_date lastUpdateDate, last_update_by lastUpdateBy 
+  </sql>
+  <select id="getById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_account_role
+    where ur_id = #{urId,jdbcType=VARCHAR}
+  </select>
+  <select id="getByAccountId" resultType="com.mbl.common.bean.AccountRole" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from m_account_role
+    where account_id = #{accountId,jdbcType=VARCHAR}
+  </select>
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_account_role
+    where ur_id = #{urId,jdbcType=VARCHAR}
+  </delete>
+  <delete id="deleteByAccountId" parameterType="java.lang.String" >
+    delete from m_account_role
+    where account_id = #{accountId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.AccountRole" >
+    insert into m_account_role
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="urId != null" >
+        ur_id,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+      <if test="roleId != null" >
+        role_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="urId != null" >
+        #{urId,jdbcType=VARCHAR},
+      </if>
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="update" parameterType="com.mbl.common.bean.AccountRole" >
+    update m_account_role
+    <set >
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
+      </if>
+      <if test="roleId != null" >
+        role_id = #{roleId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where ur_id = #{urId,jdbcType=VARCHAR}
+  </update>
+  <!-- 根据条件查询账户  -->
+	<!--<select id="findAllListByParams" resultType="com.mbl.common.vo.AccountVO">
+		SELECT a.account_id accountId, a.account_code accountCode, a.pwd pwd, 
+    		a.account_type accountType, a.user_id userId, a.status status,a.creation_date,
+    		a.shop_id shopId, a.disabled_date disabledDate, u.user_name userName
+		FROM m_account a left join m_user u on a.user_id = u.user_id  
+		where 1=1
+		<if test="accountCode != null" >
+        	and a.account_code like '%${accountCode}%'
+	    </if>
+		<if test="accountType != null" >
+        	and a.account_type = #{accountType,jdbcType=VARCHAR}
+	    </if>
+		<if test="status != null" >
+        	and a.status = #{status,jdbcType=VARCHAR}
+	    </if>
+	    <if test="password != null" >
+	        and a.pwd = #{password,jdbcType=VARCHAR}
+	    </if>
+	    <if test="accountId != null" >
+	        and a.account_id = #{accountId,jdbcType=VARCHAR}
+	    </if>
+		 order by a.creation_date desc
+	</select>-->
+	
+  <select id="getCountByParams" resultType="long" parameterType="map" >
+    select 
+    	count(*)
+    from m_account_role
+    where 1=1 
+    <if test="accountId != null" >
+        and account_id =#{accountId,jdbcType=VARCHAR}
+    </if>
+    <if test="roleId != null" >
+        and role_id =#{roleId,jdbcType=VARCHAR}
+    </if>
+	<if test="status != null" >
+    	and status = #{status,jdbcType=VARCHAR}
+    </if>
+  </select>
+</mapper>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.AuthRoleMenuMapper">
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.RoleMenu" />
+
+	<resultMap id="baseResultMap" type="com.mbl.common.bean.RoleMenu" />
+
+	
+	<resultMap id="roleMenuMap" type="com.mbl.common.vo.RoleMenuVO" />
+	
+	<!-- 映射字段 -->
+	<sql id="base_column_list">
+		rm.role_id roleId,role_name
+		roleName,rm.menu_id menuId ,m.parent_Menu_Id parentMenuId,
+		menu_name menuName,rm.creation_Date creationDate,rm.creation_By creationBy,
+		rm.last_Update_Date lastUpdateDate,rm.last_Update_By lastUpdateBy
+	</sql>
+
+	<insert id="save" parameterMap="baseParameterMap">
+		insert into m_role_menu
+		(rm_id,role_id,menu_id,creation_date,creation_by,last_update_date,last_update_by)
+		VALUES(#{rmId,jdbcType=VARCHAR},#{roleId,jdbcType=VARCHAR},#{menuId,jdbcType=VARCHAR},
+		#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+		#{lastUpdateBy,jdbcType=VARCHAR})
+	</insert>
+
+	<update id="update" parameterMap="baseParameterMap">
+		update m_role_menu
+		<set>
+			<if test="roleId != null">
+				role_id=#{roleId,jdbcType=VARCHAR},
+			</if>
+			<if test="menuId != null">
+				menu_id=#{menuId,jdbcType=VARCHAR},
+			</if>
+			<if test="creationDate != null">
+				creation_date=#{creationDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="creationBy != null">
+				creation_by=#{creationBy,jdbcType=VARCHAR},
+			</if>
+			<if test="lastUpdateDate != null">
+				last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+			</if>
+			<if test="lastUpdateBy != null">
+				last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+			</if>
+		</set>
+		WHERE rm_id=#{rmId,jdbcType=VARCHAR}
+	</update>
+
+	<!-- 根据id删除 -->
+	<delete id="delById">
+		delete from m_role_menu where
+		rm_id=#{rmId,jdbcType=VARCHAR}
+	</delete>
+
+	<!-- 根据id删除 -->
+	<delete id="delByRoleId" parameterMap="baseParameterMap">
+		delete from m_role_menu where
+		role_id=#{roleId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 根据id查询某个角色 -->
+	<select id="getRoleMenuById" resultMap="roleMenuMap">
+		SELECT
+		<include refid="base_column_list" />
+		FROM m_role_menu rm,m_role r,m_menu m where
+		rm.role_id = r.role_id and rm.menu_id = m.menu_id and
+		rm_id=#{rmId,jdbcType=VARCHAR}
+	</select>
+	
+	
+		<!-- 根据条件查询角色  -->
+	<select id="findRoleMenuListByParams" resultMap="roleMenuMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_role_menu rm,m_role r,m_menu m where
+		rm.role_id = r.role_id and rm.menu_id = m.menu_id 
+		 <if test="parentMenuId!=null and parentMenuId!=''">AND m.parent_menu_id=#{parentMenuId,jdbcType=VARCHAR}</if>
+		 <if test="roleId!=null and roleId!=''">AND rm.role_id=#{roleId,jdbcType=VARCHAR}</if>
+		 <if test="roleName!=null and roleName!=''">AND r.role_name=#{roleName,jdbcType=VARCHAR}</if>
+		 <if test="menuId!=null and menuId!=''">AND rm.menu_id=#{menuId,jdbcType=VARCHAR}</if>
+	 	 <if test="menuName!=null and menuName!=''">AND m.menu_name=#{menuName,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<!-- 根据条件查询角色数量 -->
+	<select id="getCountByParams" resultType="Integer">
+		SELECT count(1)
+		FROM m_role_menu rm,m_role r,m_menu m where
+		rm.role_id = r.role_id and rm.menu_id = m.menu_id 
+		 <if test="parentMenuId!=null and parentMenuId!=''">AND m.parent_menu_id=#{parentMenuId,jdbcType=VARCHAR}</if>
+		 <if test="roleId!=null and roleId!=''">AND rm.role_id=#{roleId,jdbcType=VARCHAR}</if>
+		 <if test="roleName!=null and roleName!=''">AND r.role_name=#{roleName,jdbcType=VARCHAR}</if>
+		 <if test="menuId!=null and menuId!=''">AND m.menu_id=#{menuId,jdbcType=VARCHAR}</if>
+	 	 <if test="menuName!=null and menuName!=''">AND m.menu_name=#{menuName,jdbcType=VARCHAR}</if>
+	</select>
+</mapper>

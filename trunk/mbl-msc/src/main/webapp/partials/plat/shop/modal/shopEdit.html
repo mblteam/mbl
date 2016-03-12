@@ -1,0 +1,221 @@
+<!-- modal begin -->
+  <!--  Modal content for the above example -->
+<div class="modal fade modal-scroll" id="shopEditModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-replace="true">
+    <div class="modal-dialog modal-lg" style="width:90%;">
+      	<div class="modal-content">
+
+	        <div class="modal-header">
+	          <button type="button" class="close" data-dismiss="modal">
+	          <span aria-hidden="true">&times;</span>
+	          <span class="sr-only">Close</span>
+	          </button>
+	          <h4 class="modal-title" id="myLargeModalLabel">添加门店</h4>
+	        </div>
+	        <div class="modal-body row">
+ 				<form class="form-horizontal" role="form" id="baseinfo-form">
+					<div class="row">
+						<div class="col-xs-11">
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺编号:
+								</label>
+								<div class="col-sm-7"> 
+									<input id="" name="shopCode" 
+	                             		ng-model="shopVO.shopCode" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺名称:
+								</label>
+								<div class="col-sm-7"> 
+									<input id="" name="shopName" 
+	                             		ng-model="shopVO.shopName" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺地址:</label>
+								<div class="col-sm-7">
+									<input id="" name="address" 
+	                             		ng-model="shopVO.address" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									推荐等级:</label>
+								<div class="col-sm-7">
+									<input id="" name="level" 
+	                             		ng-model="shopVO.level" class="input-xlarge input-sm  error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									经度:</label>
+								<div class="col-sm-7">
+									<input id="" name="longitude" 
+	                             		ng-model="shopVO.longitude" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									纬度:</label>
+								<div class="col-sm-7">
+									<input id="" name="latitude" 
+	                             		ng-model="shopVO.latitude" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合同折扣上限:</label>
+								<div class="col-sm-7">
+									<input id="" name="discountUpperLimit" 
+	                             		ng-model="shopVO.discountUpperLimit" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合同折扣下限:</label>
+								<div class="col-sm-7">
+									<input id="" name="discountLowerLimit" 
+	                             		ng-model="shopVO.discountLowerLimit" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合作开始日期:</label>
+								<div class="col-sm-7">
+									<input id="cooperateStartDate" name="cooperateStartDate"  readonly
+										my-datepicker-model="shopVO.cooperateStartDate"
+	                             		ng-model="shopVO.cooperateStartDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合作结束日期:</label>
+								<div class="col-sm-7">
+									<input id="cooperateEndDate" name="cooperateEndDate"  readonly
+										my-datepicker-model="shopVO.cooperateEndDate"
+	                             		ng-model="shopVO.cooperateEndDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合作状态:</label>
+								<div class="col-sm-7">
+									<select class="input-xlarge input-sm  error-span" type="text" name="cooperateStatus"
+										ng-model="shopVO.cooperateStatus"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_cooperate_status">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									结算方式:</label>
+								<div class="col-sm-7">
+									<select class="input-xlarge input-sm  error-span" type="text" name="balanceType"
+										ng-model="shopVO.balanceType" ng-change = "changeRebateDate()"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_balance_type">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									结算日期:</label>
+								<div class="col-sm-7">
+									<select class="input-xlarge input-sm  error-span" type="text" name="rebateDate"
+										ng-model="shopVO.rebateDate"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_object">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									联系方式:</label>
+								<div class="col-sm-7">
+									<input id="" name="tel" 
+	                             		ng-model="shopVO.tel" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺类型:</label>
+								<div class="col-sm-7">
+									<select class="input-xlarge input-sm  error-span" type="text" name="shopType"
+										ng-model="shopVO.shopType"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_shop_type">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺图片:</label>
+								<div class="col-sm-7">
+									<img name="url" id="url" ng-src="{{null!=shopVO.url?shopVO.url:'images/upload/uploading.png'}}" 
+											alt="" width="150px;" height="100px;" ng-click="uploadPhoto(shopVO)"/>
+								</div>
+							</div>
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									合同返点:</label>
+								<div class="col-sm-7">
+									<input id="" name="rebate" 
+	                             		ng-model="shopVO.rebate" class="input-xlarge input-sm error-span" type="text" >
+								</div>
+							</div>
+							
+							<div  class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									登录系统账号:</label>
+								<div class="col-sm-7">
+									<input id="" name="accountCode"
+	                             		ng-model="shopVO.accountCode" class="input-xlarge input-sm error-span" type="text" >
+	                             	<input id="" name="accountId"
+	                             		ng-model="shopVO.accountId" class="input-xlarge input-sm error-span" type="hidden" >
+								</div>
+							</div>
+							
+							<div class="form-group col-xs-6">
+								<label class="col-sm-4 control-label no-padding-right" for="">
+									店铺状态:</label>
+								<div class="col-sm-7">
+									<select class="input-xlarge input-sm  error-span" type="text" name="shopStatus"
+										ng-model="shopVO.shopStatus"
+										ng-options="dict.dictCode as dict.dictValue for dict in dict_shop_status">
+										<option value="">--请选择--</option>
+									</select>
+								</div>
+							</div>
+							<div class="form-group col-xs-12">
+								<label class="col-sm-2 control-label no-padding-right" for="">
+									店铺介绍:</label>
+								<div class="col-sm-8">
+									<textarea name="introduce" ng-model="shopVO.introduce" class="input-xxlarge input-sm error-span"  
+										rows="5" cols="50">
+									</textarea>
+								</div>
+							</div>
+						</div>
+					</div>
+				</form>
+	        </div>
+	        <div class="modal-footer"> 
+				<div class="row">
+					<center class="submit col-sm-12"><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-primary btn-r-primary  btn-radius" ng-click="saveOk()">
+						<i class="ace-icon fa  fa-check bigger-110"></i>确 定</button>
+						<button class="btn btn-default btn-r-default  btn-radius" data-dismiss="modal"> <i class="ace-icon fa fa-times bigger-110"></i>关 闭</button>
+					</center>
+				</div> 
+			</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- modal end -->

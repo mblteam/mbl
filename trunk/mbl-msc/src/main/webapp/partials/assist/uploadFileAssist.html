@@ -1,0 +1,189 @@
+<div class="modal-header">
+          <button type="button" class="close" ng-click="cancel()">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="myLargeModalLabel">{{uploadTitle?uploadTitle:'文件上传'}}</h4>
+        </div>
+        <div class="modal-body row">
+            <div class="row">
+	            <input type="hidden" id="uploadType" value="{{uploadType}}"/>
+	            <form action="basic/upload/uploadFile" method="POST" enctype="multipart/form-data"
+	                	target="upload_hidden_frame" id="uploadForm" onsubmit="return checkUploadFile();">
+	                  <div class=" col-xs-12">
+	                      <label class="col-xs-2 control-label no-padding-right" for="form-field-8" style="text-align: right;">{{uploadType=='IMAGE'?'图片':'文件'}}：</label>
+	                      <div class="col-xs-7">
+	                          <input type="file" name="myfile" id="id-input-file"/>
+	                          <input type="hidden" name="FILE_CATE" value="{{uploadType}}"/>
+	                          <input type="hidden" name="FILE_PATH" value="{{uploadPath}}"/>
+	                      </div>  
+	                      <label class="col-xs-2 control-label no-padding-right" for="form-field-8" style="text-align: right;">
+	                      	<input class="btn btn-primary btn-r-primary btn-sm btn-radius" type="submit" onclick="$('#upload_hidden_frame').submit();" value="上传"/>
+	                      </label>
+	                  </div>
+                 </form>
+                 <iframe name="upload_hidden_frame" id="upload_hidden_frame" style="display:none;"></iframe>
+                 <input type="hidden" id="fileInfoId"/>
+            </div>
+        </div>
+        <div class="modal-footer"> 
+            <div class="row">
+                <center class="submit col-sm-12"><!--col-xs-offset-10 col-xs-2 -->
+                    <button class="btn btn-primary btn-r-primary  btn-radius" ng-click="ok()">
+                        <i class="ace-icon fa  fa-check bigger-110"></i>确 定
+                    </button>
+                    <button class="btn btn-default btn-r-default  btn-radius" ng-click="cancel()"> 
+                        <i class="ace-icon fa fa-times bigger-110"></i>关闭
+                    </button>
+                </center>
+            </div> 
+        </div>
+    <!-- /.modal-content -->
+
+    <script type="text/javascript">
+    
+        require(['jquery','gritter','../assets/js/ace/elements.fileinput'],function(){
+  
+            $('#id-input-file').ace_file_input({
+                no_file:'上传附件 ...',
+                btn_choose:'选择',
+                btn_change:'更改',
+                droppable:false,
+                onchange:null,
+                thumbnail:false //| true | large
+                //whitelist:'gif|png|jpg|jpeg'
+                //blacklist:'exe|php'
+                //onchange:''
+                //
+            });
+        });
+	    
+	    function callbackFilePath (fileInfoId){
+     		if("error"!=fileInfoId){
+     			if(fileInfoId){
+     				$("#fileInfoId").val(fileInfoId);
+     			}
+     			$.gritter.add({ 
+   			      	title: "通知", 
+   			      	text: "上传成功!",
+   			      	sticky: false,
+   			      	time: 1500,
+   			      	class_name: 'gritter-success gritter-center'
+   			    });
+     		}else{
+     			$.gritter.add({ 
+   			      	title: "错误", 
+   			      	text: "上传失败!",
+   			     	 sticky: false,
+   			      	time: 1500,
+   			      	class_name: 'gritter-error gritter-center'
+   			    });
+     		}    		
+    	}
+    	
+    	function checkUploadFile(){
+    		var filePath = $("#id-input-file").val();
+    		if(null!=filePath&&""!=filePath){
+    			var uploadType = $("#uploadType").val();
+    			if(""!=uploadType){
+    				if(-1!=uploadType.indexOf("[")){
+    					var uploadTypeList = eval('('+uploadType+')');
+    					if(!matchFileType(uploadTypeList)){
+        					return false;
+        				}
+    				}else{
+    					if(!matchFileType(uploadType)){
+        					return false;
+        				}
+    				}
+    			} 
+    			if(!matchFileSize()){
+    				return false;
+    			}
+    			return true;
+    		}else{
+    			$("#uploadResultSpan").text("请选择导入的文件！！！");
+    			return false;
+    		}
+    		return false;
+    	}
+    	
+    	
+    	var uploadTypeMap = {"IMAGE":{uploadDesc:"图片",uploadRule:/^.+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$/},
+    			"PDF":{uploadDesc:"pdf",uploadRule:/^.+(.PDF|.pdf)$/},
+    			"WORD":{uploadDesc:"word",uploadRule:/^.+(.DOC|.doc|.DOCX|.docx)$/},
+    			"XLS":{uploadDesc:"EXCEL",uploadRule:/^.+(.XLS|.xls|.XLSX|.xlsx)$/}};
+
+    	//判断图片格式
+    	function matchFileType(uploadType){
+    		var obj = document.getElementById("id-input-file");
+    		if(angular.isArray(uploadType)){
+    			console.log("it is array");
+    			var utStr = "";
+    			var uploadOk = false;
+    			angular.forEach(uploadType, function(ut){
+    				var re = new RegExp(uploadTypeMap[ut]['uploadRule']);
+    				uploadOk = uploadOk||re.test(obj.value);
+    				utStr += uploadTypeMap[ut]['uploadDesc']+",";
+				});
+    			console.log(utStr);
+    			if(!uploadOk){
+    				alert("请上传"+utStr.substring(0,utStr.length-1));
+    				return false;
+    			}
+    		}else{
+    			console.log("it is not array:"+uploadType);
+	    	    if(uploadType=="IMAGE"){
+	    	    	if(!/^.+(.JPEG|.jpeg|.JPG|.jpg|.GIF|.gif|.BMP|.bmp|.PNG|.png)$/.test(obj.value)){
+	    	    		alert("请上传图片!");
+	    	    	    return false;
+	    	    	}
+	    	    	return true;
+	    	    }
+	    	    if(uploadType=="PDF"){
+	    	    	if(!/^.+(.PDF|.pdf)$/.test(obj.value)){
+	    	    		alert("请上传pdf文件!");
+	    	    	    return false;
+	    	    	}
+	    	    	return true;
+	    	    }
+	    	    if(uploadType=="WORD"){
+	    	    	if(!/^.+(.DOC|.doc|.DOCX|.docx)$/.test(obj.value)){
+	    	    		alert("请上传word文件!");
+	    	    	    return false;
+	    	    	}
+	    	    	return true;
+	    	    }
+	    	    if(uploadType=="XLS"){
+	    	    	if(!/^.+(.XLS|.xls|.XLSX|.xlsx)$/.test(obj.value)){
+	    	    		alert("请上传文件!");
+	    	    	    return false;
+	    	    	}
+	    	    	return true;
+	    	    }
+    		}
+	    	return true;
+    	}
+    	
+    	//判断文件大小
+    	function matchFileSize(){
+    		var obj = document.getElementById("id-input-file");
+    	    var fileSize = 0;
+    	    var isIE = /msie/i.test(navigator.userAgent) && !window.opera;            
+    	    if (isIE && !obj.files) {          
+    	         var filePath = obj.value;            
+    	         var fileSystem = new ActiveXObject("Scripting.FileSystemObject");   
+    	         var file = fileSystem.GetFile (filePath);               
+    	         fileSize = file.Size;         
+    	    }else {  
+    	         fileSize = obj.files[0].size;     
+    	    } 
+    	    fileSize=Math.round(fileSize/1024*100)/100; //单位为M
+    	    if(fileSize>=50){
+    	        alert("图片最大尺寸为50KB，请重新上传!");
+    	        return false;
+    	    }
+    	    return true;
+    	}
+    </script>
+    

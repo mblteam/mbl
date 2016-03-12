@@ -1,0 +1,402 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.OrderMapper" >
+  <resultMap id="baseResultMap" type="com.mbl.common.vo.OrderVO" >
+    <id column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="car_id" property="carId" jdbcType="VARCHAR" />
+    <result column="brand_name" property="brandName" jdbcType="VARCHAR" />
+    <result column="series_name" property="seriesName" jdbcType="VARCHAR" />
+    <result column="car_plate_no" property="carPlateNo" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="order_time" property="orderTime" jdbcType="TIMESTAMP" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="is_pay" property="isPay" jdbcType="VARCHAR" />
+    <result column="is_pay_name" property="isPayName" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="DECIMAL" />
+    <result column="discount" property="discount" jdbcType="DECIMAL" />
+    <result column="paid" property="paid" jdbcType="DECIMAL" />
+    <result column="is_use_point" property="isUsePoint" jdbcType="VARCHAR" />
+    <result column="is_use_coupon" property="isUseCoupon" jdbcType="VARCHAR" />
+    <result column="pay_type" property="payType" jdbcType="VARCHAR" />
+    <result column="order_type" property="orderType" jdbcType="VARCHAR" />
+    <result column="order_type_name" property="orderTypeName" jdbcType="VARCHAR" />
+    <result column="use_point" property="usePoint" jdbcType="DECIMAL" />
+    <result column="is_settle" property="isSettle" jdbcType="VARCHAR" />
+    <result column="settle_time" property="settleTime" jdbcType="TIMESTAMP" />
+    
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="balance_type" property="balanceType" jdbcType="VARCHAR" />
+    <result column="is_settle_name" property="isSettleName" jdbcType="VARCHAR" />
+    <result column="is_use_point_name" property="isUsePointName" jdbcType="VARCHAR" />
+    <result column="balance_type_name" property="balanceTypeName" jdbcType="VARCHAR" />
+    <result column="pay_type_name" property="payTypeName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="order_no" property="orderNo" jdbcType="VARCHAR" />
+    <result column="appointment_id" property="appointmentId" jdbcType="VARCHAR" />
+    <result column="appointment_no" property="appointmentNo" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="order_time_str" property="orderTimeStr" jdbcType="VARCHAR" />
+  </resultMap>
+  <parameterMap id="baseParameterMap" type="com.mbl.common.bean.Order"></parameterMap>
+  
+  <sql id="base_column_list" >
+    order_id, user_id, car_id,description, shop_id, order_time, creation_date, creation_by, 
+    last_update_date, last_update_by, is_pay, price, discount, paid, is_use_point, is_use_coupon, 
+    pay_type, order_type, use_point, is_settle, settle_time,order_no,status,appointment_id,account_id
+  </sql>
+  
+  <select id="getById" resultType="com.mbl.common.bean.Order">
+  	  select order_id orderId, user_id userId, car_id carId,description, shop_id shopId, order_time orderTime, 
+  	  creation_date creationDate, creation_by creationBy, 
+    last_update_date lastUpdateDate, last_update_by lastUpdateBy, is_pay isPay, price, discount, paid, 
+    is_use_point isUsePoint, is_use_coupon isUseCoupon, 
+    pay_type payType, order_type orderType, use_point usePoint, is_settle isSettle, 
+    settle_time settleTime,order_no orderNo,status,appointment_id appointmentId
+		FROM m_order o where o.order_id=#{orderId,jdbcType=VARCHAR}
+  </select>
+  
+  <update id="updateOrderStatus">
+  	update m_order o set status=#{status,jdbcType=VARCHAR}
+  	where 1=1
+  	<if test="orderId!=null and orderId!=''">AND o.order_id = #{orderId,jdbcType=VARCHAR}</if>
+    <if test="shopId!=null and shopId!=''">AND o.shop_id=#{shopId,jdbcType=VARCHAR}</if>
+	<if test="orderTimeBegin!=null and orderTimeBegin!=''">AND o.order_time>=DATE_FORMAT(#{orderTimeBegin,jdbcType=VARCHAR})</if>
+	<if test="orderTimeEnd!=null and orderTimeEnd!=''"><![CDATA[ AND o.order_time < DATE_FORMAT(#{orderTimeEnd,jdbcType=VARCHAR}) + 1]]></if>
+	<if test="balanceType!=null and balanceType!=''">
+		and shop_id in (select shop_id from m_shop s where s.balance_type=#{balanceType,jdbcType=VARCHAR})
+	</if>
+	<if test="carId!=null and carId!=''">
+		and car_id=#{carId,jdbcType=VARCHAR}
+	</if>
+	<if test="payType!=null and payType!=''">
+		and o.is_pay=#{payType,jdbcType=VARCHAR}
+	</if>
+	<if test="isPay!=null and isPay!=''">
+		and o.pay_type=#{isPay,jdbcType=VARCHAR}
+	</if>
+  </update>
+  
+  <update id="payAfterUpdateOrderStatus" parameterType="map">
+  	UPDATE m_order o SET o.is_pay = '1',o.status = '3',o.trade_no = #{tradeNo,jdbcType=VARCHAR},
+  		o.pay_type = #{payType,jdbcType=VARCHAR}
+  	where o.order_no = #{orderNo,jdbcType=VARCHAR}
+  	 and o.is_pay = '0'
+  	and o.status != '3'
+  </update>
+  
+  <select id="getOrderById" resultMap="baseResultMap">
+   		select o.*,
+		       s.shop_name,
+		       uc.brand_name,
+		       uc.series_name,
+		       uc.car_plate_no,
+		       s.balance_type,
+		       dsettle.dict_value  is_settle_name,
+		       dpoint.dict_value   is_use_point_name,
+		       dbalance.dict_value balance_type_name,
+			   dpaytype.dict_value pay_type_name,
+			   dorderstatus.dict_value status_name,
+			   ordertype.dict_value order_type_name,
+			   a.appointment_no appointment_no,
+			   DATE_FORMAT(o.order_time,'%Y-%m-%d %T') order_time_str,
+			   s.longitude,
+	   		   s.latitude
+		 from m_order o 
+		 	left join m_shop s on o.shop_id = s.shop_id
+		 	left join m_user_car uc on uc.car_id = o.car_id
+		 	left join m_appointment a on a.appointment_id = o.appointment_id 
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'is_settle'
+		           and dh.dict_status = '1') dsettle on o.is_settle = dsettle.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'is_use_point'
+		           and dh.dict_status = '1') dpoint on o.is_use_point = dpoint.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'balance_type'
+		           and dh.dict_status = '1') dbalance on s.balance_type = dbalance.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'pay_type'
+		           and dh.dict_status = '1') dpaytype on o.pay_type = dpaytype.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_status'
+		           and dh.dict_status = '1') dorderstatus on o.status = dorderstatus.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_type'
+		           and dh.dict_status = '1') ordertype on o.order_type = ordertype.dict_code 
+		 where o.order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getOrderByOrderNo" resultMap="baseResultMap">
+   		select o.*,
+		       s.shop_name,
+		       uc.brand_name,
+		       uc.series_name,
+		       uc.car_plate_no,
+		       s.balance_type,
+		       dsettle.dict_value  is_settle_name,
+		       dpoint.dict_value   is_use_point_name,
+		       dbalance.dict_value balance_type_name,
+			   dpaytype.dict_value pay_type_name,
+			   dorderstatus.dict_value status_name,
+			   ordertype.dict_value order_type_name,
+			   a.appointment_no appointment_no,
+			   DATE_FORMAT(o.order_time,'%Y-%m-%d %T') order_time_str,
+			   s.longitude,
+	   		   s.latitude
+		 from m_order o 
+		 	left join m_shop s on o.shop_id = s.shop_id
+		 	left join m_user_car uc on uc.car_id = o.car_id
+		 	left join m_appointment a on a.appointment_id = o.appointment_id 
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'is_settle'
+		           and dh.dict_status = '1') dsettle on o.is_settle = dsettle.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'is_use_point'
+		           and dh.dict_status = '1') dpoint on o.is_use_point = dpoint.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'balance_type'
+		           and dh.dict_status = '1') dbalance on s.balance_type = dbalance.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'pay_type'
+		           and dh.dict_status = '1') dpaytype on o.pay_type = dpaytype.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_status'
+		           and dh.dict_status = '1') dorderstatus on o.status = dorderstatus.dict_code
+		    left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_type'
+		           and dh.dict_status = '1') ordertype on o.order_type = ordertype.dict_code 
+		 where o.order_no = #{orderNo,jdbcType=VARCHAR} LIMIT 1
+  </select>
+  
+  <update id="settleByParams"  parameterType="com.mbl.common.vo.SettleVO">
+  	update m_order o set o.settle_time = CURRENT_DATE(),o.is_settle = '1' 
+	where o.is_pay='1'
+  		<if test="shopId!=null and shopId!=''">AND o.shop_id=#{shopId,jdbcType=VARCHAR}</if>
+  		<if test="shopCode!=null and shopCode!=''">AND o.shop_id in (select shop_id from m_shop where shop_code =#{shopCode,jdbcType=VARCHAR})</if>
+		<if test="orderTimeBegin!=null and orderTimeBegin!=''">AND o.order_time>=DATE_FORMAT(#{orderTimeBegin,jdbcType=VARCHAR},'%Y-%m-%d')</if>
+		<if test="orderTimeEnd!=null and orderTimeEnd!=''"><![CDATA[ AND o.order_time < date_add(DATE_FORMAT(#{orderTimeEnd,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]></if>
+		<if test="balanceType!=null and balanceType!=''">
+			and shop_id in (select shop_id from m_shop s where s.balance_type=#{balanceType,jdbcType=VARCHAR})
+		</if>
+  </update>
+  
+  <delete id="delById">
+    delete from m_order
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </delete>
+  
+  <insert id="save" parameterMap="baseParameterMap">
+    insert into m_order (order_id, user_id, car_id,description, 
+      shop_id, order_time, creation_date, 
+      creation_by, last_update_date, last_update_by, 
+      is_pay, price, discount, 
+      paid, is_use_point, is_use_coupon, 
+      pay_type, order_type, use_point, 
+      is_settle, settle_time,order_no,status,appointment_id,account_id)
+    values (#{orderId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR},#{carId,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, 
+      #{shopId,jdbcType=VARCHAR}, #{orderTime,jdbcType=TIMESTAMP}, #{creationDate,jdbcType=TIMESTAMP}, 
+      #{creationBy,jdbcType=VARCHAR}, #{lastUpdateDate,jdbcType=TIMESTAMP}, #{lastUpdateBy,jdbcType=VARCHAR}, 
+      #{isPay,jdbcType=VARCHAR}, #{price,jdbcType=DECIMAL}, #{discount,jdbcType=DECIMAL}, 
+      #{paid,jdbcType=DECIMAL}, #{isUsePoint,jdbcType=VARCHAR}, #{isUseCoupon,jdbcType=VARCHAR}, 
+      #{payType,jdbcType=VARCHAR}, #{orderType,jdbcType=VARCHAR}, #{usePoint,jdbcType=DECIMAL}, 
+      #{isSettle,jdbcType=VARCHAR}, #{settleTime,jdbcType=TIMESTAMP},#{orderNo,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR},#{appointmentId,jdbcType=VARCHAR},#{accountId,jdbcType=VARCHAR})
+  </insert>
+
+  <update id="update" parameterMap="baseParameterMap">
+    update m_order
+    set user_id = #{userId,jdbcType=VARCHAR},
+      car_id = #{carId,jdbcType=VARCHAR},
+      description = #{description,jdbcType=VARCHAR},
+      shop_id = #{shopId,jdbcType=VARCHAR},
+      order_time = #{orderTime,jdbcType=TIMESTAMP},
+      creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      creation_by = #{creationBy,jdbcType=VARCHAR},
+      last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      is_pay = #{isPay,jdbcType=VARCHAR},
+      price = #{price,jdbcType=DECIMAL},
+      discount = #{discount,jdbcType=DECIMAL},
+      paid = #{paid,jdbcType=DECIMAL},
+      is_use_point = #{isUsePoint,jdbcType=VARCHAR},
+      is_use_coupon = #{isUseCoupon,jdbcType=VARCHAR},
+      pay_type = #{payType,jdbcType=VARCHAR},
+      order_type = #{orderType,jdbcType=VARCHAR},
+      use_point = #{usePoint,jdbcType=DECIMAL},
+      is_settle = #{isSettle,jdbcType=VARCHAR},
+      settle_time = #{settleTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      order_no = #{orderNo,jdbcType=VARCHAR},
+      appointment_id = #{appointmentId,jdbcType=VARCHAR}
+      account_id = #{accountId,jdbcType=VARCHAR}
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据条件查询 -->
+	<select id="findListPageByParams" resultMap="baseResultMap">
+		SELECT o.*,
+		CONCAT(IFNULL(u.user_name,''),' ',IFNULL(u.tel,'')) user_name,
+       s.shop_name,
+       uc.brand_name,
+	   uc.series_name,
+	   uc.car_plate_no,
+       s.balance_type ,
+	   dsettle.dict_value  is_settle_name,
+	   dpoint.dict_value   is_use_point_name,
+	   dbalance.dict_value balance_type_name,
+	   dpaytype.dict_value pay_type_name,
+	   dispay.dict_value is_pay_name,
+	   dorderstatus.dict_value status_name,
+	   ordertype.dict_value order_type_name,
+	   DATE_FORMAT(o.order_time,'%Y-%m-%d %H:%i:%s') order_time_str,
+	   s.longitude,
+	   s.latitude
+  FROM m_order o INNER JOIN m_shop s ON o.shop_id = s.shop_id 
+    LEFT JOIN m_user u ON u.user_id = o.user_id 
+    left join m_user_car uc on uc.car_id = o.car_id
+  	LEFT JOIN
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_settle'
+           AND dh.dict_status = '1') dsettle ON o.is_settle = dsettle.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code 
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_use_point'
+           AND dh.dict_status = '1') dpoint ON o.is_use_point = dpoint.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'balance_type'
+           AND dh.dict_status = '1') dbalance ON s.balance_type = dbalance.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'pay_type'
+           AND dh.dict_status = '1') dpaytype ON o.pay_type = dpaytype.dict_code  LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_pay'
+           AND dh.dict_status = '1') dispay ON o.is_pay = dispay.dict_code 
+       left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_status'
+		           and dh.dict_status = '1') dorderstatus on o.status = dorderstatus.dict_code
+       left join (select dh.dict_id, dl.dict_value, dl.dict_code
+		          from m_dict_head dh, m_dict_line dl
+		         where dh.dict_id = dl.dict_head_id
+		           and dh.head_code = 'order_type'
+		           and dh.dict_status = '1') ordertype on o.order_type = ordertype.dict_code 
+       where 1 = 1 
+		<if test="shopId!=null and shopId!=''">AND o.shop_id=#{shopId,jdbcType=VARCHAR}</if>
+		<if test="balanceType!=null and balanceType!=''">AND s.balance_type=#{balanceType,jdbcType=VARCHAR}</if>
+		<if test="settleTimeBegin!=null and settleTimeBegin!=''">AND o.settle_time>=DATE_FORMAT(#{settleTimeBegin,jdbcType=VARCHAR},'%Y-%m-%d')</if>
+		<if test="settleTimeEnd!=null and settleTimeEnd!=''"><![CDATA[ AND o.settle_time < date_add(DATE_FORMAT(#{settleTimeEnd,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]></if>
+		<if test="orderTimeBegin!=null and orderTimeBegin!=''">AND o.order_time>=DATE_FORMAT(#{orderTimeBegin,jdbcType=VARCHAR},'%Y-%m-%d')</if>
+		<if test="orderTimeEnd!=null and orderTimeEnd!=''"><![CDATA[ AND o.order_time < date_add(DATE_FORMAT(#{orderTimeEnd,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]></if>
+		<if test="orderType!=null and orderType!=''">AND o.order_type = #{orderType,jdbcType=VARCHAR}</if>
+		<if test="orderNo!=null and orderNo!=''">AND o.order_no like CONCAT('%',#{orderNo,jdbcType=VARCHAR},'%')</if>
+		<if test="shopName!=null and shopName!=''">AND s.shop_name like CONCAT('%',#{shopName,jdbcType=VARCHAR},'%')</if>
+		<if test="isPay!=null and isPay!=''">AND o.is_pay=#{isPay,jdbcType=VARCHAR}</if>
+		<if test="userName!=null and userName!=''">
+			AND ( u.user_name like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+					or u.tel like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')  )
+		</if>
+		<if test="orderStatus!=null and orderStatus!=''">
+			AND o.status= #{orderStatus,jdbcType=VARCHAR}
+		</if>
+		<if test="accountId!=null and accountId!=''">AND o.account_id=#{accountId,jdbcType=VARCHAR} and o.status not in ('0','-1')</if>
+		order by o.order_time desc 
+	</select>
+	
+	 <!-- 根据条件查询 -->
+	<select id="countListByParams" resultType="Long">
+		SELECT count(1)
+  FROM m_order o INNER JOIN m_shop s ON o.shop_id = s.shop_id 
+    LEFT JOIN m_user u ON u.user_id = o.user_id 
+  	LEFT JOIN
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_settle'
+           AND dh.dict_status = '1') dsettle ON o.is_settle = dsettle.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code 
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_use_point'
+           AND dh.dict_status = '1') dpoint ON o.is_use_point = dpoint.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'balance_type'
+           AND dh.dict_status = '1') dbalance ON s.balance_type = dbalance.dict_code LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'pay_type'
+           AND dh.dict_status = '1') dpaytype ON o.pay_type = dpaytype.dict_code  LEFT JOIN 
+       (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+          FROM m_dict_head dh, m_dict_line dl
+         WHERE dh.dict_id = dl.dict_head_id
+           AND dh.head_code = 'is_pay'
+           AND dh.dict_status = '1') dispay ON o.is_pay = dispay.dict_code 
+       where o.status = 1
+		<if test="shopId!=null and shopId!=''">AND o.shop_id=#{shopId,jdbcType=VARCHAR}</if>
+		<if test="balanceType!=null and balanceType!=''">AND s.balance_type=#{balanceType,jdbcType=VARCHAR}</if>
+		<if test="settleTimeBegin!=null and settleTimeBegin!=''">AND o.settle_time>=DATE_FORMAT(#{settleTimeBegin,jdbcType=VARCHAR},'%Y-%m-%d')</if>
+		<if test="settleTimeEnd!=null and settleTimeEnd!=''"><![CDATA[ AND o.settle_time < date_add(DATE_FORMAT(#{settleTimeEnd,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]></if>
+		<if test="orderTimeBegin!=null and orderTimeBegin!=''">AND o.order_time>=DATE_FORMAT(#{orderTimeBegin,jdbcType=VARCHAR},'%Y-%m-%d')</if>
+		<if test="orderTimeEnd!=null and orderTimeEnd!=''"><![CDATA[ AND o.order_time < date_add(DATE_FORMAT(#{orderTimeEnd,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]></if>
+		<if test="orderType!=null and orderType!=''">AND o.order_type = #{orderType,jdbcType=VARCHAR}</if>
+		<if test="orderNo!=null and orderNo!=''">AND o.order_no like CONCAT('%',#{orderNo,jdbcType=VARCHAR},'%')</if>
+		<if test="shopName!=null and shopName!=''">AND s.shop_name like CONCAT('%',#{shopName,jdbcType=VARCHAR},'%')</if>
+		<if test="isPay!=null and isPay!=''">AND o.is_pay=#{isPay,jdbcType=VARCHAR}</if>
+		<if test="userName!=null and userName!=''">
+			AND ( u.user_name like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')
+					or u.tel like CONCAT('%',#{userName,jdbcType=VARCHAR},'%')  )
+		</if>
+		<if test="accountId!=null and accountId!=''">AND o.account_id=#{accountId,jdbcType=VARCHAR}</if>
+	</select>
+	
+	<select id="findMaxOrderNo" resultType="string">
+	    SELECT
+		  IFNULL(MAX(SUBSTRING(order_no,10)),0)AS orderNo 
+		FROM
+		  m_order  
+		WHERE
+		  order_no LIKE CONCAT('_',DATE_FORMAT(CURRENT_DATE(), '%Y%m%d'),'%')
+  	</select>
+</mapper>

@@ -1,0 +1,89 @@
+<div class="page-content-area">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+					<div class="row"> 
+						<div class="form-group col-xs-12">
+				 			<label class="col-sm-1 control-label no-padding-right" for="">店铺名:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.shopName" /> 
+							</div>
+							<label class="col-sm-1 control-label no-padding-right" for="">预约开始日期:</label>
+							<div class="col-sm-3">
+								<input id="couponStartDate" name="appointmentBeginDate"  readonly
+										my-datepicker-model="search.appointmentBeginDate"
+	                             		ng-model="search.appointmentBeginDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+							</div>
+							<label class="col-sm-1 control-label no-padding-right" for="">预约结束日期:</label>
+							<div class="col-sm-3">
+								<input id="couponStartDate" name="appointmentEndDate"  readonly
+										my-datepicker-model="search.appointmentEndDate"
+	                             		ng-model="search.appointmentEndDate" class="input-xlarge input-sm error-span" 
+	                             		type="text" onClick="WdatePicker({skin:'twoer'})">
+							</div>
+						</div>
+					</div>
+				</form>
+	            <div class="hr hr-8 solid dotted-bottom search-hr">
+	                <span class="search-tool" ng-click="onsearch()">
+	                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+	                </span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-10">
+	                    <br/><br/>
+	                </div>
+	            </div>
+	            <div class="hr hr-8 hr-double dotted"></div>
+	            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list   table-condensed  checked-0">
+                            <thead>
+                                <tr>
+                                   <th width="5%">序号</th>
+                                   <th>预约单号</th>
+								   <th>预约用户</th>
+								   <th>联系方式</th>
+								   <th>预约时间</th>
+								   <th>预约店铺</th>
+								   <th>预约车辆品牌</th>
+								   <th>预约车辆型号</th>
+								   <th>状态</th>
+								   <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in dataList.data">
+	                                <td>{{$index+1}}</td>
+	                                <td>{{item.appointmentNo}}</td>
+	                                <td>{{item.userName}}</td>
+	                                 <td>{{item.tel}}</td>
+	                                <td>{{item.appointmentTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+	                                <td>{{item.shopName}}</td>
+	                                <td>{{item.carBrandName}}</td>
+	                                <td>{{item.carTypeName}}</td>
+	                                <td>{{item.statusName}}</td>
+	                                <td>
+										<div class="hidden-sm hidden-xs action-buttons">
+	                                        <a class="green" href="javascript:;" ng-click="showAppointmentDetail(item.appointmentId)">
+												<i class="ace-icon fa fa-search bigger-130"></i>详情
+											</a>
+											
+											 <a class="blue" ng-if="item.status == 1" href="javascript:;" ng-click="disabledAppointment(item.appointmentId)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>取消预约
+											</a>
+	                                     </div>
+									</td> 
+                             	</tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="dataList" plat-form="search"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'partials/appointment/modal/appointmentDetail.html'"></div>

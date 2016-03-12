@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mbl.common.mapper.ShopCarMapper">
+  <resultMap id="baseResultMap" type="com.mbl.common.vo.ShopCarVO">
+    <id column="sc_id" jdbcType="VARCHAR" property="scId" />
+    <result column="brand" jdbcType="VARCHAR" property="brand" />
+    <result column="brand_name" jdbcType="VARCHAR" property="brandName" />
+    <result column="car_name" jdbcType="VARCHAR" property="carName" />
+    <result column="creation_date" jdbcType="TIMESTAMP" property="creationDate" />
+    <result column="creation_by" jdbcType="VARCHAR" property="creationBy" />
+    <result column="last_update_date" jdbcType="TIMESTAMP" property="lastUpdateDate" />
+    <result column="last_update_by" jdbcType="VARCHAR" property="lastUpdateBy" />
+    <result column="shop_id" jdbcType="VARCHAR" property="shopId" />
+    <result column="shop_name" jdbcType="VARCHAR" property="shopName" />
+    <result column="delete_flag" jdbcType="VARCHAR" property="deleteFlag" />
+  </resultMap>
+  
+  <sql id="base_column_list">
+    sc_id,brand,car_name,creation_date,creation_by,last_update_date,last_update_by,shop_id,delete_flag
+  </sql>
+  
+   <select id="getShopCarById" resultMap="baseResultMap">
+  	select sc.*,cb.brand_name,s.shop_name
+	  from m_shop_car sc,m_car_brand cb,m_shop s
+	 where sc.brand = cb.cb_id
+ 	   and sc.shop_id = s.shop_id
+ 	   and sc.delete_flag='0'
+  	   and sc.sc_id = #{scId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delByShopId" parameterType="java.lang.String" >
+    delete from m_shop_car
+    	where shop_id = #{shopId,jdbcType=VARCHAR}
+  </delete>
+  
+  <select id="selectListByParams" resultMap="baseResultMap" parameterType="map">
+  	select sc.*,cb.brand_name,s.shop_name
+	  from m_shop_car sc,m_car_brand cb,m_shop s
+	 where sc.brand = cb.cb_id
+ 	   and sc.shop_id = s.shop_id
+ 	   and sc.delete_flag='0'
+  	   and sc.shop_id = #{shopId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="countListByParams" resultType="Long" parameterType="map">
+  	select count(1)
+	  from m_shop_car sc,m_car_brand cb,m_shop s
+	 where sc.brand = cb.cb_id
+ 	   and sc.shop_id = s.shop_id
+ 	   and sc.delete_flag='0'
+  	   and sc.shop_id = #{shopId,jdbcType=VARCHAR}
+  </select>
+  
+  <insert id="save" parameterType="com.mbl.common.bean.ShopCar">
+    insert into m_shop_car
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        sc_id,
+      </if>
+      <if test="brand != null">
+        brand,
+      </if>
+      <if test="carName != null">
+        car_name,
+      </if>
+      <if test="creationDate != null">
+        creation_date,
+      </if>
+      <if test="creationBy != null">
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by,
+      </if>
+      <if test="shopId != null">
+        shop_id,
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="scId != null">
+        #{scId,jdbcType=VARCHAR},
+      </if>
+      <if test="brand != null">
+        #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carName != null">
+        #{carName,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.Package">
+    update m_shop_car
+    <set>
+      <if test="brand != null">
+        brand = #{brand,jdbcType=VARCHAR},
+      </if>
+      <if test="carName != null">
+        car_name = #{carName,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null">
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null">
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null">
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null">
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null">
+        shop_id = #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="deleteFlag != null">
+        delete_flag = #{deleteFlag,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where sc_id = #{scId,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateDeleteFlagById">
+  	update m_shop_car set delete_flag='1'  where sc_id = #{scId,jdbcType=VARCHAR}
+  </update>
+  
+</mapper>

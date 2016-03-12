@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.OrderDetailMapper" >
+  <resultMap id="baseResultMap" type="com.mbl.common.vo.OrderDetailVO" >
+    <id column="order_detail_id" property="orderDetailId" jdbcType="VARCHAR" />
+    <result column="order_id" property="orderId" jdbcType="VARCHAR" />
+    <result column="pkg_id" property="pkgId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="pkg_discount" property="pkgDiscount" jdbcType="DECIMAL" />
+    <result column="pkg_price" property="pkgPrice" jdbcType="DECIMAL" />
+    <result column="pkg_start_date" property="pkgStartDate" jdbcType="TIMESTAMP" />
+    <result column="pkg_end_date" property="pkgEndDate" jdbcType="TIMESTAMP" />
+    <result column="pkg_start_date_str" property="pkgStartDateStr" jdbcType="VARCHAR" />
+    <result column="pkg_end_date_str" property="pkgEndDateStr" jdbcType="VARCHAR" />
+    <result column="pkg_type" property="pkgType" jdbcType="VARCHAR" />
+    <result column="pkg_num" property="pkgNum" jdbcType="VARCHAR" />
+    <result column="pkg_type_name" property="pkgTypeName" jdbcType="VARCHAR" />
+    <result column="pkg_name" property="pkgName" jdbcType="VARCHAR" />
+    <result column="apply_model" property="applyModel" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="base_column_list" >
+    order_detail_id orderDetailId, order_id orderId, pkg_id pkgId, creation_date creationDate, 
+    creation_by creationBy, last_update_date lastUpdateDate, last_update_by lastUpdateBy, 
+    description, pkg_discount pkgDiscount, pkg_price pkgPrice, 
+    pkg_start_date pkgStartDate, pkg_end_date pkgEndDate, 
+    pkg_name pkgName,pkg_type pkgType, pkg_num pkgNum
+  </sql>
+  <select id="findListByParams" resultType="com.mbl.common.bean.OrderDetail">
+    select 
+    	<include refid="base_column_list"/>
+    from m_order_detail
+	 where 
+       order_id = #{orderId,jdbcType=VARCHAR}
+  </select>
+  <select id="findOrderDetailListByParams" resultMap="baseResultMap">
+    select o.*, DATE_FORMAT(o.pkg_start_date,'%Y%m%d') pkgStartDateStr,DATE_FORMAT(o.pkg_end_date,'%Y%m%d') pkgEndDateStr, dpkgtype.dict_value  pkg_type_name,p.pkg_name pkgName, p.apply_model applyModel
+	  from m_order_detail o inner join 
+	        (select dh.dict_id, dl.dict_value, dl.dict_code
+	          from m_dict_head dh, m_dict_line dl
+	         where dh.dict_id = dl.dict_head_id
+	           and dh.head_code = 'pkg_type'
+	           and dh.dict_status = '1') dpkgtype on o.pkg_type = dpkgtype.dict_code
+	       left join m_shop_package p on p.pkg_id = o.pkg_id
+	       left join m_order mo on o.order_id = mo.order_id
+	  where 1=1
+	  <if test="orderId != null" >
+        and o.order_id = #{orderId,jdbcType=CHAR}
+      </if>
+       <if test="orderNo != null" >
+        and mo.order_no = #{orderNo,jdbcType=CHAR}
+      </if>
+	  
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from m_order_detail
+    where order_id = #{orderId,jdbcType=CHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.OrderDetail" >
+    insert into m_order_detail (order_detail_id, order_id, pkg_id, 
+      creation_date, creation_by, last_update_date, 
+      last_update_by, description, pkg_discount, 
+      pkg_price, pkg_start_date, pkg_end_date, 
+      pkg_type, pkg_num,pkg_name)
+    values (#{orderDetailId,jdbcType=CHAR}, #{orderId,jdbcType=CHAR}, #{pkgId,jdbcType=CHAR}, 
+      #{creationDate,jdbcType=TIMESTAMP}, #{creationBy,jdbcType=VARCHAR}, #{lastUpdateDate,jdbcType=TIMESTAMP}, 
+      #{lastUpdateBy,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{pkgDiscount,jdbcType=DECIMAL}, 
+      #{pkgPrice,jdbcType=DECIMAL}, #{pkgStartDate,jdbcType=TIMESTAMP}, #{pkgEndDate,jdbcType=TIMESTAMP}, 
+      #{pkgType,jdbcType=VARCHAR}, #{pkgNum,jdbcType=VARCHAR}, #{pkgName,jdbcType=VARCHAR})
+  </insert>
+  
+  <insert id="insertbatch" parameterType="java.util.List" >
+    insert into m_order_detail (order_detail_id, order_id, pkg_id, 
+      creation_date, creation_by, last_update_date, 
+      last_update_by, description, pkg_discount, 
+      pkg_price, pkg_start_date, pkg_end_date, 
+      pkg_type, pkg_num,pkg_name) values
+	<foreach collection="list" item="item" index="index" separator=",">
+    	(#{item.orderDetailId,jdbcType=CHAR}, #{item.orderId,jdbcType=CHAR}, #{item.pkgId,jdbcType=CHAR}, 
+        #{item.creationDate,jdbcType=TIMESTAMP}, #{item.creationBy,jdbcType=VARCHAR}, #{item.lastUpdateDate,jdbcType=TIMESTAMP}, 
+        #{item.lastUpdateBy,jdbcType=VARCHAR}, #{item.description,jdbcType=VARCHAR}, #{item.pkgDiscount,jdbcType=DECIMAL}, 
+        #{item.pkgPrice,jdbcType=DECIMAL}, #{item.pkgStartDate,jdbcType=TIMESTAMP}, #{item.pkgEndDate,jdbcType=TIMESTAMP}, 
+        #{item.pkgType,jdbcType=VARCHAR}, #{item.pkgNum,jdbcType=VARCHAR}, #{item.pkgName,jdbcType=VARCHAR})
+	</foreach>
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.OrderDetail" >
+    update m_order_detail
+    <set >
+      <if test="orderId != null" >
+        order_id = #{orderId,jdbcType=CHAR},
+      </if>
+      <if test="pkgId != null" >
+        pkg_id = #{pkgId,jdbcType=CHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="description != null" >
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgDiscount != null" >
+        pkg_discount = #{pkgDiscount,jdbcType=DECIMAL},
+      </if>
+      <if test="pkgPrice != null" >
+        pkg_price = #{pkgPrice,jdbcType=DECIMAL},
+      </if>
+      <if test="pkgStartDate != null" >
+        pkg_start_date = #{pkgStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgEndDate != null" >
+        pkg_end_date = #{pkgEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="pkgType != null" >
+        pkg_type = #{pkgType,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgNum != null" >
+        pkg_num = #{pkgNum,jdbcType=VARCHAR},
+      </if>
+      <if test="pkgName != null" >
+        pkg_name = #{pkgName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where order_detail_id = #{orderDetailId,jdbcType=CHAR}
+  </update>
+  
+  <update id="batchUpdate" parameterType="string" >
+    update m_order_detail set status = '0'
+    where order_id = #{orderId,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 根据id删除某个订单明细 -->
+	<delete id="delById">
+		delete from m_order_detail where order_detail_id = #{orderDetailId,jdbcType=CHAR}
+	</delete>
+	 
+  <!-- 根据id删除某个订单明细 -->
+	<delete id="delByOrderId">
+		delete from m_order_detail where order_id = #{orderId,jdbcType=CHAR}
+	</delete>
+</mapper>

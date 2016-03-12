@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.DictMapper">
+	<parameterMap id="baseParameterMap" type="com.mbl.common.bean.DictHead" />
+
+	<resultMap id="baseResultMap" type="com.mbl.common.bean.DictHead">
+		<id column="dict_id" property="dictId" jdbcType="VARCHAR" />
+	    <result column="dict_name" property="dictName" jdbcType="VARCHAR" />
+	    <result column="dict_status" property="dictStatus" jdbcType="VARCHAR" />
+	    <result column="head_code" property="headCode" jdbcType="VARCHAR" />
+	    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+	    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+	    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+	    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="findListByHeadCode" resultType="com.mbl.common.bean.DictLine" parameterType="java.lang.String">
+		select
+			line.dict_line_id dictLineId ,
+		    line.dict_head_id dictHeadId ,
+		    line.dict_code dictCode ,
+		    line.dict_value dictValue, 
+		    line.line_status lineStatus ,
+		    line.creation_date creationDate ,
+		    line.creation_by creationBy ,
+		    line.last_update_date lastUpdateDate ,
+		    line.last_update_by lastUpdateBy 
+		from m_dict_head head
+		left join m_dict_line line ON head.dict_id = line.dict_head_id
+		where
+		1=1
+			and head.head_code = #{headCode,jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="save" parameterMap="baseParameterMap">
+		insert into m_dict_head (dict_id,dict_name,dict_status,head_code,creation_date,creation_by,last_update_date,last_update_by)
+		VALUES(#{dictId,jdbcType=VARCHAR},#{dictName,jdbcType=VARCHAR},
+			   #{dictStatus,jdbcType=VARCHAR},#{headCode,jdbcType=VARCHAR},#{creationDate,jdbcType=TIMESTAMP},#{creationBy,jdbcType=VARCHAR},#{lastUpdateDate,jdbcType=TIMESTAMP},
+			   #{lastUpdateBy,jdbcType=VARCHAR})
+	</insert>
+	
+	<update id="update" parameterMap="baseParameterMap">
+		update m_dict_head
+		<set >
+			<if test="dictName != null" >
+	      		dict_name=#{dictName,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="dictStatus != null" >
+	      		dict_status=#{dictStatus,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="headCode != null" >
+	      		head_code=#{headCode,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="creationDate != null" >
+	      		creation_date=#{creationDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="creationBy != null" >
+	      		creation_by=#{creationBy,jdbcType=VARCHAR},
+	      	</if>
+	      	<if test="lastUpdateDate != null" >
+	      		last_update_date=#{lastUpdateDate,jdbcType=TIMESTAMP},
+	      	</if>
+	      	<if test="lastUpdateBy != null" >
+	      		last_update_by=#{lastUpdateBy,jdbcType=VARCHAR},
+	      	</if>
+     </set> 
+	WHERE dict_id=#{dictId,jdbcType=VARCHAR}
+	</update>
+	
+	<!-- 根据id删除某个字典 -->
+	<delete id="delById">
+		delete from m_dict_head where dict_id=#{dictId,jdbcType=VARCHAR}
+	</delete>
+	
+	<!-- 映射字段 -->
+	<sql id="base_column_list" >
+		dict_id dictId,dict_name dictName,dict_status dictStatus,head_code headCode,creation_Date creationDate,creation_By creationBy,
+		last_Update_Date lastUpdateDate,last_Update_By lastUpdateBy
+	</sql>
+	<!-- 根据条件查询角色  -->
+	<select id="findListByParams" resultMap="baseResultMap">
+		SELECT <include refid="base_column_list" /> 
+		FROM m_dict_head where 1=1
+		 <if test="dictId!=null and dictId!=''">AND dict_id=#{dictId,jdbcType=VARCHAR}</if>
+		 <if test="dictName!=null and dictName!=''">AND dict_name like '%${dictName}%'</if>
+		 <if test="headCode!=null and headCode!=''">AND head_code like '%${headCode}%'</if>
+		 order by last_update_date desc
+	</select>
+	<!-- 根据条件查询角色数量 -->
+	<select id="getCountByParams" resultType="Long">
+		SELECT count(1)
+		FROM m_dict_head where 1=1
+		 <if test="dictId!=null and dictId!=''">AND dict_id=#{dictId,jdbcType=VARCHAR}</if>
+		 <if test="dictName!=null and dictName!=''">AND dict_name like '%${dictName}%'</if>
+	</select>
+</mapper>

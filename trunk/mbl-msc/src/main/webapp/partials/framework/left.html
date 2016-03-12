@@ -1,0 +1,125 @@
+ <ul class="nav nav-list">
+ 	<li class="active open">
+		<a href="javascript:;" class="dropdown-toggle">
+			<i class="menu-icon fa fa-desktop"></i>
+			<span class="menu-text">{{leftMenuObject.text}}</span>
+
+			<b class="arrow fa fa-angle-left"></b>
+		</a>
+
+		<b class="arrow"></b>
+		
+		<ul class="submenu">
+			<li ng-class="{
+			active:isActive(menu.path),
+			open:$state.includes(menu.path)
+			}"  ng-repeat="menu in leftMenuObject.children">
+					<a href="javascript:;" ng-if="menu.path==null" class="dropdown-toggle">
+						<i class="menu-icon fa fa-caret-right"></i>
+						{{menu.text}}
+						<b class="arrow fa fa-angle-left"></b>
+					</a>
+					<a ui-sref="{{menu.path}}" ng-if="menu.path!=null">
+						<i class="menu-icon fa fa-caret-right"></i>
+						{{menu.text}}
+					</a>
+					<b class="arrow"></b>
+		
+					<ul class="submenu">
+						<li ng-class="{
+							active:isActive(menu1.path),
+							open:$state.includes(menu1.path)
+						}"  ng-repeat="menu1 in menu.children">
+							<a href="javascript:;" ng-if="menu1.path==null" class="dropdown-toggle">
+								<i class="menu-icon fa fa-caret-right"></i>
+								{{menu1.text}}
+								<b class="arrow fa fa-angle-left"></b>
+							</a>
+							<a ui-sref="{{menu1.path}}" ng-if="menu1.path!=null">
+								<i class="menu-icon fa fa-caret-right"></i>
+								{{menu1.text}}
+							</a>
+							<b class="arrow"></b>
+							
+							<ul class="submenu">
+								<li ng-class="{
+									active:isActive(menu2.path),
+									open:$state.includes(menu2.path)
+								}"  ng-repeat="menu2 in menu1.children">
+									<a href="javascript:;" ng-if="menu2.path==null" class="dropdown-toggle">
+										<i class="menu-icon fa fa-caret-right"></i>
+										{{menu2.text}}
+										<b class="arrow fa fa-angle-left"></b>
+									</a>
+									<a ui-sref="{{menu2.path}}" ng-if="menu2.path!=null">
+										<i class="menu-icon fa fa-caret-right"></i>
+										{{menu2.text}}
+									</a>
+									<b class="arrow"></b>
+									
+									<ul class="submenu">
+										<li ng-class="{
+											active:isActive(menu3.path),
+											open:$state.includes(menu3.path)
+										}"  ng-repeat="menu3 in menu2.children">
+											<a href="javascript:;" ng-if="menu3.path==null" class="dropdown-toggle">
+												<i class="menu-icon fa fa-caret-right"></i>
+												{{menu3.text}}
+												<b class="arrow fa fa-angle-left"></b>
+											</a>
+											<a ui-sref="{{menu3.path}}" ng-if="menu3.path!=null">
+												<i class="menu-icon fa fa-caret-right"></i>
+												{{menu3.text}}
+											</a>
+											<b class="arrow"></b>
+										</li>
+									</ul>
+									
+								</li>
+							</ul>
+							
+						</li>
+					</ul>
+					
+				</li>
+			</ul>
+		</li>
+
+	</ul><!-- /.nav-list -->
+
+	<!-- #section:basics/sidebar.layout.minimize -->
+	<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
+		<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
+	</div>
+
+ 
+
+
+	<!-- ace scripts  
+
+	<script src="assets/js/jquery.min.js"></script>
+
+ 	<script src="assets/plugins/lefttree.js"></script>
+	<script src="assets/js/ace/ace.sidebar.js"></script>
+	<script src="assets/js/ace/ace.submenu-1.js"></script> 
+	<script src="assets/js/ace/ace.widget-box.js"></script> 
+
+-->
+	<script type="text/javascript">
+		// jQuery(function($) {
+		// 	$(".nav.nav-list a[href*=#]").click(function(){
+		// 		$('.btn-scroll-up').click(); 
+		// 	});
+		// });
+	require( [
+		'jquery', 
+		'../assets/plugins/lefttree',
+		'../assets/js/ace-extra.min',
+		'../assets/plugins/acesubmenu',
+		'../assets/plugins/acesidebar',
+		'../assets/plugins/acewidgetbox',
+	], function($) {
+ 		init($);
+	}); 
+
+	</script>

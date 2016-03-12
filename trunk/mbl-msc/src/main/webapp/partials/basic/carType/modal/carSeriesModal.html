@@ -1,0 +1,106 @@
+<!-- modal begin -->
+  <!--  Modal content for the above example -->
+<div class="modal fade modal-scroll" id="carSeriesModal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true" data-replace="true">
+    <div class="modal-dialog modal-lg" style="width:80%;">
+      	<div class="modal-content">
+
+	        <div class="modal-header">
+	          <button type="button" class="close" ng-click="settingCarSeriesCancel()">
+	          <span aria-hidden="true">&times;</span>
+	          <span class="sr-only">Close</span>
+	          </button>
+	          <h4 class="modal-title" id="myLargeModalLabel">设置车系</h4>
+	        </div>
+	        <div class="modal-body" style="height:450px;overflow-y:auto;">
+ 				 
+ 				<div class="row">
+					<div class="table-responsive">
+						<div class="row">
+							<div class="col-xs-8">
+								<h4 class="widget-title blue smaller">
+									<i class="ace-icon glyphicon glyphicon-list orange"></i>
+									车系
+								</h4>
+							</div>
+						</div>
+						<div class="hr hr-8 hr-double dotted"></div>
+						
+						<table class="table table-condensed table-striped table-bordered table-hover">
+							<thead>
+								<tr>
+									<th>序号</th>
+									<th><span class="required">*</span>车系编号</th> 
+									<th><span class="required">*</span>车系</th> 														
+									<th><span class="required">*</span>工厂</th> 	
+									<th>
+										<div class="hidden-sm hidden-xs action-buttons center">
+											操作
+											<button ng-if="!isView" class="blue btn btn-info btn-xs btn-r-info  btn-radius" 
+												ng-click="pushLoop(carSeriesList,{edit:true})">
+												<i class="ace-icon glyphicon glyphicon-plus bigger-110"></i>添加
+											</button> 
+										</div>
+									</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr ng-repeat="kmh in carSeriesList">
+									<td>{{$index+1}}</td>
+									<td ng-if="kmh.edit">
+										<input ng-model="kmh.seriesCode" class="input-medium input-sm height25 error-span" type="text">
+									</td>
+									<td ng-if="!kmh.edit">{{kmh.seriesCode}}</td>
+									
+									<td ng-if="kmh.edit">
+										<input ng-model="kmh.series" class="input-medium input-sm height25 error-span" type="text">
+									</td>
+									<td ng-if="!kmh.edit">{{kmh.series}}</td>
+									
+									<td ng-if="kmh.edit">
+										<input ng-model="kmh.factory" class="input-medium input-sm height25 error-span" type="text">
+									</td>
+									<td ng-if="!kmh.edit">{{kmh.factory}}</td>
+									
+									<td ng-if="kmh.edit&&!isView">
+										<div class="hidden-sm hidden-xs action-buttons center">
+											<a class="purple" href="javascript:;" ng-click="saveLoop(carSeriesList,$index,['seriesCode','series','factory'])">
+												<i class="ace-icon fa fa-floppy-o bigger-130"></i>保存
+											</a>
+											 <a class="blue" href="javascript:;" ng-click="popLoopCarSeries(carSeriesList,$index)" title="取消">
+                                                <i class="ace-icon glyphicon glyphicon-remove bigger-130"></i>取消
+                                            </a>
+										</div>
+									</td>
+									<td ng-if="!kmh.edit&&!isView"> 
+										<div class="hidden-sm hidden-xs action-buttons center">
+											<a class="green" href="javascript:;" ng-click="editCarSeries(carSeriesList,$index)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+											</a>
+											<a class="red" href="javascript:;" ng-click="popLoop(carSeriesList,$index)">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+											</a>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					
+				</div>
+	        </div>
+	        <div class="modal-footer"> 
+				<div class="row">
+					<center ng-if="!isView" class="submit col-sm-12" ><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-primary btn-r-primary  btn-radius" ng-click="settingCarSeriesOk()">
+						<i class="ace-icon fa  fa-check bigger-110"></i>确 定</button>
+						<button class="btn btn-default btn-r-default  btn-radius" ng-click="settingCarSeriesCancel()"> <i class="ace-icon fa fa-times bigger-110"></i>取 消</button>
+					</center>
+					<center ng-if="isView" class="submit col-sm-12" ><!--col-xs-offset-10 col-xs-2 -->
+						<button class="btn btn-default btn-r-default  btn-radius" ng-click="settingCarSeriesCancel()"> <i class="ace-icon fa fa-times bigger-110"></i>关 闭</button>
+					</center>
+				</div> 
+			</div>
+      	</div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!-- modal end -->

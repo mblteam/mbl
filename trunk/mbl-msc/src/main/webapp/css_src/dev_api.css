@@ -1,0 +1,13 @@
+/*
+根据UI结构重写CSS，仅在相应UI组件创建时，加载对应css，顺序加载
+*/
+
+/*-------基础UI构建，必须加载-------*/
+
+@import "framework.css";
+
+@import "page.css";
+
+@import "jstree.css";
+
+@import "fontimport.css";

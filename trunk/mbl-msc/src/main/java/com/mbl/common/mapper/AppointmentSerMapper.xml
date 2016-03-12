@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.AppointmentSerMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.vo.AppointmentServiceVO" >
+    <id column="os_id" property="osId" jdbcType="VARCHAR" />
+    <result column="service_code" property="serviceCode" jdbcType="VARCHAR" />
+    <result column="service_name" property="serviceName" jdbcType="VARCHAR" />
+    <result column="appointment_id" property="appointmentId" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    os_id, service_code, appointment_id, creation_date, creation_by, last_update_date, 
+    last_update_by
+  </sql>
+  <select id="getAppointmentServiceById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select a.*,das.dict_value service_name
+    from m_appointment_service a,
+    (select dh.dict_id, dl.dict_value, dl.dict_code
+				          from m_dict_head dh, m_dict_line dl
+				         where dh.dict_id = dl.dict_head_id
+				           and dh.head_code = 'appointment_service'
+				           and dh.dict_status = '1') das
+    where a.service_code = das.dict_code
+    and appointment_id = #{appointmentId,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="findAppointmentServices" resultType="com.mbl.common.vo.AppointmentServiceVO" parameterType="java.lang.String" >
+    SELECT 
+      mas.os_id osId, 
+      mas.service_code serviceCode, 
+      mas.appointment_id appointmentId,
+      dpaytype.dict_value serviceName
+    FROM m_appointment_service mas
+    LEFT JOIN (SELECT dh.dict_id, dl.dict_value, dl.dict_code
+		          FROM m_dict_head dh, m_dict_line dl
+		         WHERE dh.dict_id = dl.dict_head_id
+		           AND dh.head_code = 'appointment_service'
+		           AND dh.dict_status = '1') dpaytype ON mas.service_code = dpaytype.dict_code
+    where appointment_id = #{appointmentId,jdbcType=VARCHAR}
+  </select>
+  
+  <delete id="delById" parameterType="java.lang.String" >
+    delete from m_appointment_service
+    where os_id = #{osId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="save" parameterType="com.mbl.common.bean.AppointmentService" >
+    insert into m_appointment_service
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="osId != null" >
+        os_id,
+      </if>
+      <if test="serviceCode != null" >
+        service_code,
+      </if>
+      <if test="appointmentId != null" >
+        appointment_id,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="osId != null" >
+        #{osId,jdbcType=VARCHAR},
+      </if>
+      <if test="serviceCode != null" >
+        #{serviceCode,jdbcType=CHAR},
+      </if>
+      <if test="appointmentId != null" >
+        #{appointmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <insert id="insertbatch" parameterType="java.util.List" >
+    insert into m_appointment_service(os_id, service_code, appointment_id,creation_date, 
+    									creation_by, last_update_date,last_update_by)
+
+    <trim prefix="values"  suffixOverrides="," >
+      <foreach collection="list" item="item"   separator="," >
+        (
+        #{item.osId,jdbcType=VARCHAR},
+        #{item.serviceCode,jdbcType=CHAR},
+        #{item.appointmentId,jdbcType=VARCHAR},
+        #{item.creationDate,jdbcType=TIMESTAMP},
+        #{item.creationBy,jdbcType=VARCHAR},
+        #{item.lastUpdateDate,jdbcType=TIMESTAMP},
+        #{item.lastUpdateBy,jdbcType=VARCHAR}
+        )
+      </foreach>
+    </trim>
+
+
+  </insert>
+  
+  <update id="update" parameterType="com.mbl.common.bean.AppointmentService" >
+    update m_appointment_service
+    <set >
+      <if test="serviceCode != null" >
+        service_code = #{serviceCode,jdbcType=CHAR},
+      </if>
+      <if test="appointmentId != null" >
+        appointment_id = #{appointmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        creation_date = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        creation_by = #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date = #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by = #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where os_id = #{osId,jdbcType=VARCHAR}
+  </update>
+</mapper>

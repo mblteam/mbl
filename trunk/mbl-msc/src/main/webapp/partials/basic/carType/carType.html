@@ -1,0 +1,98 @@
+<div class="page-content-area">
+    <div class="row">
+        <div class="col-xs-12 form-contain">
+            <form class="form-horizontal" role="form">
+					<div class="row"> 
+						<div class="form-group col-xs-12">
+							<label class="col-sm-1 control-label no-padding-right" for="">品牌编码:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.brandCode" /> 
+							</div>
+				 			<label class="col-sm-1 control-label no-padding-right" for="">品牌名称:</label>
+							<div class="col-sm-3">
+								<input class="input-large input-sm" type="text" ng-model="search.brandName" /> 
+							</div>
+						</div>
+					</div>
+				</form>
+	            <div class="hr hr-8 solid dotted-bottom search-hr">
+	                <span class="search-tool" ng-click="onsearch()">
+	                <i class="ace-icon glyphicon glyphicon-search bigger-110"></i>&nbsp;查 询
+	                </span>
+	            </div>
+	            <div class="row">
+	                <div class="col-xs-10">
+	                    <a class="btn btn-primary btn-r-primary btn-sm btn-radius" ng-click="pushLoopFront(dataList.data,{edit:true})"><i class="ace-icon glyphicon glyphicon-plus bigger-110"></i>&nbsp;添 加</a>
+	                </div>
+	            </div>
+	            <div class="hr hr-8 hr-double dotted"></div>
+	            <div class="row">
+                <div class="col-xs-12">
+                    <div>
+                        <table id="sample-table-2" class="table table-striped table-bordered table-hover table-list   table-condensed  checked-0">
+                            <thead>
+                                <tr>
+                                   <th width="10%">序号</th>
+								   <th width="15%">品牌编码</th>
+								   <th width="15%">品牌名称</th>
+								   <th width="30%">图标</th>
+								   <th width="20%">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            	<tr ng-repeat="item in dataList.data">
+	                                <td>{{$index+1}}</td>
+	                                <td ng-if="!item.edit">
+	                                	{{item.brandCode}}
+	                                </td>
+	                                <td ng-if="item.edit">
+	                                    <input class="input-medium height25" type="text" ng-model="item.brandCode"/>
+	                                </td>
+	                                <td ng-if="!item.edit">
+	                                    {{item.brandName}}
+	                                </td>
+	                                <td ng-if="item.edit">
+	                                    <input class="input-medium height25" type="text" ng-model="item.brandName">
+	                                </td>
+	                                <td ng-if="!item.edit">
+	                                    <img ng-src="{{null!=item.url?item.url:'images/upload/uploading.png'}}" 
+											alt="" width="100px;" height="100px;"/>
+	                                </td>
+	                                <td ng-if="item.edit">
+	                                    <img ng-src="{{null!=item.url?item.url:'images/upload/uploading.png'}}" 
+											alt="" width="100px;" height="100px;" ng-click="uploadPhoto(dataList.data,$index)"/>
+	                                </td>
+	                                <td ng-if="!item.edit">
+										<div class="hidden-sm hidden-xs action-buttons">
+	                                        <a class="green" href="javascript:;" ng-click="editCarType(dataList.data,$index)">
+												<i class="ace-icon fa fa-pencil bigger-130"></i>编辑
+											</a>
+											<a class="red" href="javascript:;" ng-click="removeCarType(item.cbId)">
+												<i class="ace-icon fa fa-trash-o bigger-130"></i>删除
+											</a>
+											<a class="blue" href="javascript:;" ng-click="settingCarSeries(dataList.data,$index)" title="取消">
+                                                <i class="ace-icon fa fa-cogs bigger-130"></i>设置
+                                            </a>
+	                                     </div>
+									</td> 
+	                                <td ng-if="item.edit">
+										<div class="hidden-sm hidden-xs action-buttons">
+											<a class="purple" href="javascript:;" ng-click="saveCarType(dataList.data,$index)" title="保存">
+												<i class="ace-icon fa fa-floppy-o bigger-130"></i>保存
+											</a>
+                                            <a class="blue" href="javascript:;" ng-click="popLoopCarType(dataList.data,$index)" title="取消">
+                                                <i class="ace-icon glyphicon glyphicon-remove bigger-130"></i>取消
+                                            </a>
+                                        </div>
+									</td>
+                             	</tr>
+                            </tbody>
+                        </table>
+                        <div plat-paging="dataList" plat-form="search"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ng-include="'partials/basic/carType/modal/carSeriesModal.html'"></div>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mbl.common.mapper.AppointmentMapper" >
+  <resultMap id="BaseResultMap" type="com.mbl.common.vo.AppointmentVO" >
+    <id column="appointment_id" property="appointmentId" jdbcType="VARCHAR" />
+    <result column="appointment_time" property="appointmentTime" jdbcType="TIMESTAMP" />
+    <result column="message" property="message" jdbcType="VARCHAR" />
+    <result column="creation_date" property="creationDate" jdbcType="TIMESTAMP" />
+    <result column="creation_by" property="creationBy" jdbcType="VARCHAR" />
+    <result column="last_update_date" property="lastUpdateDate" jdbcType="TIMESTAMP" />
+    <result column="last_update_by" property="lastUpdateBy" jdbcType="VARCHAR" />
+    <result column="car_id" property="carId" jdbcType="VARCHAR" />
+    <result column="shop_id" property="shopId" jdbcType="VARCHAR" />
+    <result column="shop_name" property="shopName" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="status_name" property="statusName" jdbcType="VARCHAR" />
+    <result column="appointment_no" property="appointmentNo" jdbcType="VARCHAR" />
+    <result column="car_type_name" property="carTypeName" jdbcType="VARCHAR" />
+    <result column="car_brand_name" property="carBrandName" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
+    <result column="user_name" property="userName" jdbcType="VARCHAR" />
+    <result column="tel" property="tel" jdbcType="VARCHAR" />
+    <result column="is_pay" property="isPay" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    appointment_id, appointment_time, message, creation_date, creation_by, last_update_date, 
+    last_update_by, car_id, shop_id, status,appointment_no
+  </sql>
+  
+  <update id="updateAppointmentStatusById">
+  	  update m_appointment a set a.status = '2'
+  	  where a.appointment_id = #{appointmentId,jdbcType=VARCHAR}
+  </update>
+  
+   <insert id="save" parameterType="com.mbl.common.bean.Appointment" >
+    insert into m_appointment
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="appointmentId != null" >
+        appointment_id,
+      </if>
+      <if test="appointmentTime != null" >
+        appointment_time,
+      </if>
+      <if test="message != null" >
+        message,
+      </if>
+      <if test="creationDate != null" >
+        creation_date,
+      </if>
+      <if test="creationBy != null" >
+        creation_by,
+      </if>
+      <if test="lastUpdateDate != null" >
+        last_update_date,
+      </if>
+      <if test="lastUpdateBy != null" >
+        last_update_by,
+      </if>
+      <if test="carId != null" >
+        car_id,
+      </if>
+      <if test="shopId != null" >
+        shop_id,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="appointmentNo != null" >
+        appointment_no,
+      </if>
+      <if test="accountId != null" >
+        account_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="appointmentId != null" >
+        #{appointmentId,jdbcType=VARCHAR},
+      </if>
+      <if test="appointmentTime != null" >
+        #{appointmentTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="message != null" >
+        #{message,jdbcType=VARCHAR},
+      </if>
+      <if test="creationDate != null" >
+        #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="creationBy != null" >
+        #{creationBy,jdbcType=VARCHAR},
+      </if>
+      <if test="lastUpdateDate != null" >
+        #{lastUpdateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastUpdateBy != null" >
+        #{lastUpdateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="carId != null" >
+        #{carId,jdbcType=VARCHAR},
+      </if>
+      <if test="shopId != null" >
+        #{shopId,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+       <if test="appointmentNo != null" >
+         #{appointmentNo,jdbcType=VARCHAR},
+      </if>
+       <if test="accountId != null" >
+         #{accountId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <select id="findMaxAppNo" resultType="string">
+    SELECT
+	  IFNULL(MAX(SUBSTRING(appointment_no,10)),0)AS appNo 
+	FROM
+	  m_appointment 
+	WHERE
+	  appointment_no LIKE CONCAT('_',DATE_FORMAT(CURRENT_DATE(), '%Y%m%d'),'%')
+  </select>
+  
+  <select id="findAppointmentListByParams" resultMap="BaseResultMap">
+  	select a.*,s.shop_code,s.shop_name,dstatus.dict_value status_name,
+		uc.car_type,uc.brand,cs.series car_type_name,cb.brand_name car_brand_name,mu.user_name,mu.tel,mo.is_pay
+		 from m_appointment a,m_shop s,
+		(select dh.dict_id, dl.dict_value, dl.dict_code
+				          from m_dict_head dh, m_dict_line dl
+				         where dh.dict_id = dl.dict_head_id
+				           and dh.head_code = 'appointment_status'
+				           and dh.dict_status = '1') dstatus,
+		m_user_car uc,m_car_series cs,m_car_brand cb,m_account acc,m_user mu,m_order mo
+		where a.shop_id = s.shop_id
+		and a.status = dstatus.dict_code
+		and a.car_id = uc.car_id
+		and uc.car_type = cs.cs_id
+		and cb.cb_id = uc.brand
+		and cs.cs_id = uc.car_type
+		and a.account_id = acc.account_id
+		and acc.user_id = mu.user_id
+		and a.appointment_id = mo.appointment_id
+		<if test="appointmentBeginDate != null and appointmentBeginDate != ''" > 
+			and a.appointment_time >= DATE_FORMAT(#{appointmentBeginDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		</if>
+		<if test="appointmentEndDate != null and appointmentEndDate != ''" > 
+			<![CDATA[ and a.appointment_time < date_add(DATE_FORMAT(#{appointmentEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]>
+		</if>
+		<if test="shopId != null and shopId != ''" > 
+			and a.shop_id = #{shopId,jdbcType=VARCHAR}
+		</if>
+		<if test="shopName != null and shopName != ''" > 
+			and s.shop_name like '%${shopName}%'
+		</if>
+		<if test="accountId != null and accountId != ''" > 
+			and a.account_id = #{accountId,jdbcType=VARCHAR}
+			and a.status = '1'
+		</if>
+		order by a.appointment_time
+  </select>
+  
+  <select id="countAppointmentList" resultType="Long">
+  	select count(1)
+  	 from m_appointment a,m_shop s,
+		(select dh.dict_id, dl.dict_value, dl.dict_code
+				          from m_dict_head dh, m_dict_line dl
+				         where dh.dict_id = dl.dict_head_id
+				           and dh.head_code = 'appointment_status'
+				           and dh.dict_status = '1') dstatus,
+		m_user_car uc,m_car_series cs,m_car_brand cb,m_account acc,m_user mu
+		where a.shop_id = s.shop_id
+		and a.status = dstatus.dict_code
+		and a.car_id = uc.car_id
+		and uc.car_type = cs.cs_id
+		and cb.cb_id = uc.brand
+		and cs.cs_id = uc.car_type
+		and a.account_id = acc.account_id
+		and acc.user_id = mu.user_id
+		<if test="appointmentBeginDate != null and appointmentBeginDate != ''" > 
+			and a.appointment_time >= DATE_FORMAT(#{appointmentBeginDate,jdbcType=VARCHAR},'%Y-%m-%d')
+		</if>
+		<if test="appointmentEndDate != null and appointmentEndDate != ''" > 
+			<![CDATA[ and a.appointment_time < date_add(DATE_FORMAT(#{appointmentEndDate,jdbcType=VARCHAR},'%Y-%m-%d'),interval '1' day)]]>
+		</if>
+		<if test="shopId != null and shopId != ''" > 
+			and a.shop_id = #{shopId,jdbcType=VARCHAR}
+		</if>
+		<if test="shopName != null and shopName != ''" > 
+			and s.shop_name like '%${shopName}%'
+		</if>
+  </select>
+  
+  <select id="getAppointmentById" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select a.*,s.shop_code,s.shop_name,dstatus.dict_value status_name,
+		uc.car_type,uc.brand,cs.series car_type_name,cb.brand_name car_brand_name,mu.user_name,mu.tel,mo.is_pay
+		 from m_appointment a,m_shop s,
+		(select dh.dict_id, dl.dict_value, dl.dict_code
+				          from m_dict_head dh, m_dict_line dl
+				         where dh.dict_id = dl.dict_head_id
+				           and dh.head_code = 'appointment_status'
+				           and dh.dict_status = '1') dstatus,
+		m_user_car uc,m_car_series cs,m_car_brand cb,m_account acc,m_user mu,m_order mo
+		where a.shop_id = s.shop_id
+		and a.status = dstatus.dict_code
+		and a.car_id = uc.car_id
+		and uc.car_type = cs.cs_id
+		and cb.cb_id = uc.brand
+		and cs.cs_id = uc.car_type
+		and a.account_id = acc.account_id
+		and acc.user_id = mu.user_id
+		and a.appointment_id = mo.appointment_id
+		and a.appointment_id = #{appointmentId,jdbcType=VARCHAR}
+   </select>
+  
+</mapper>

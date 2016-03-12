@@ -1,0 +1,89 @@
+{{platdata}}
+<div class="table-responsive">
+	<table class="table table-condensed table-hover">
+		<thead>
+			<tr > 
+				<th style="width:8%;"></th>
+				<th style="width: {{platdata.width[$index]}};" ng-repeat="hd in platdata.head">{{hd}}</th>
+				<th style="width:8%;"></th>
+		 
+			</tr>
+		</thead>
+
+		<tbody>
+			<tr ng-repeat="obj in platdata.data">
+				
+				<td>
+					<a href="#">{{$index+1}}</a>
+				</td>
+				<td ng-repeat="ce in platdata.cell">{{obj[ce]}}</td>
+
+
+			 
+
+				<td>
+					<div class="hidden-sm hidden-xs action-buttons center">
+						<a class="red" href="javascript:;" ng-click="delItem()">
+							<i class="ace-icon fa fa-trash-o bigger-130"></i>
+						</a>
+					</div>
+ 
+				</td>
+				
+			</tr> 
+
+			<tr>
+				<td> 
+				</td>
+				<td>
+					<a href="#"></a>
+				</td>
+				<td>
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周一
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周二
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周三
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周四
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周五
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周六
+					<label class="position-relative">
+						<input type="checkbox" class="ace" />
+						<span class="lbl"></span>
+					</label>周日
+				</td>
+				<td class="hidden-480"> 
+					<div class="row">
+						<div class="col-xs-12"> 
+							<div id="slider-range2"  style="top: 9px;"></div>
+						</div>
+					</div>
+				</td>
+				<td>
+					<div class="hidden-sm hidden-xs action-buttons center">
+						<button class="blue btn btn-info btn-xs btn-r-info  btn-radius">
+							添加
+						</button> 
+					</div> 
+				</td>
+			</tr> 
+
+		</tbody>
+	</table>
+</div>
